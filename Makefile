@@ -1,5 +1,5 @@
 CC		:= g++
-CFLAGS	:= -std=c++13 -Wall -Wextra -g
+CFLAGS	:= -std=c++11 -Wall -Wextra -g -lnCurses
 
 BIN		:= bin
 SRC		:= src
