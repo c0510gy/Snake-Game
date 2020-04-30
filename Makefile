@@ -1,34 +1,41 @@
-CC := g++ # This is the main compiler
-# CC := clang --analyze # and comment out the linker last line for sanity
-SRCDIR := src
-BUILDDIR := build
-TARGET := bin/runner
+CC		:= g++
+CFLAGS	:= -std=c++13 -Wall -Wextra -g
 
-SRCEXT := cpp
-SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
-OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
-CFLAGS := -g # -Wall
-LIB := -pthread -lmongoclient -L lib -lboost_thread-mt -lboost_filesystem-mt -lboost_system-mt
-INC := -I include
+BIN		:= bin
+SRC		:= src
+INCLUDE	:= include
+LIB		:= lib
 
-$(TARGET): $(OBJECTS)
-  @echo " Linking..."
-  @echo " $(CC) $^ -o $(TARGET) $(LIB)"; $(CC) $^ -o $(TARGET) $(LIB)
+LIBRARIES	:=
 
-$(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
-  @mkdir -p $(BUILDDIR)
-  @echo " $(CC) $(CFLAGS) $(INC) -c -o $@ $<"; $(CC) $(CFLAGS) $(INC) -c -o $@ $<
+ifeq ($(OS),Windows_NT)
+EXECUTABLE	:= main.exe
+SOURCEDIRS	:= $(SRC)
+INCLUDEDIRS	:= $(INCLUDE)
+LIBDIRS		:= $(LIB)
+else
+EXECUTABLE	:= main
+SOURCEDIRS	:= $(shell find $(SRC) -type d)
+INCLUDEDIRS	:= $(shell find $(INCLUDE) -type d)
+LIBDIRS		:= $(shell find $(LIB) -type d)
+endif
 
-clean:
-  @echo " Cleaning..."; 
-  @echo " $(RM) -r $(BUILDDIR) $(TARGET)"; $(RM) -r $(BUILDDIR) $(TARGET)
+CINCLUDES	:= $(patsubst %,-I%, $(INCLUDEDIRS:%/=%))
+CLIBS		:= $(patsubst %,-L%, $(LIBDIRS:%/=%))
 
-# Tests
-tester:
-  $(CC) $(CFLAGS) test/tester.cpp $(INC) $(LIB) -o bin/tester
+SOURCES		:= $(wildcard $(patsubst %,%/*.cpp, $(SOURCEDIRS)))
+OBJECTS		:= $(SOURCES:.cpp=.o)
 
-# Spikes
-ticket:
-  $(CC) $(CFLAGS) spikes/ticket.cpp $(INC) $(LIB) -o bin/ticket
+all: $(BIN)/$(EXECUTABLE)
 
 .PHONY: clean
+clean:
+	-$(RM) $(BIN)/$(EXECUTABLE)
+	-$(RM) $(OBJECTS)
+
+
+run: all
+	./$(BIN)/$(EXECUTABLE)
+
+$(BIN)/$(EXECUTABLE): $(OBJECTS)
+	$(CC) $(CFLAGS) $(CINCLUDES) $(CLIBS) $^ -o $@ $(LIBRARIES)

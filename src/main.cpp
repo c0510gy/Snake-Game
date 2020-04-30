@@ -1,11 +1,8 @@
-/* 
- * title: main.cpp
- * 
- */
+#include <iostream>
 
-#include "Snake-Game/Snake-Game.h"
-#include "Snake-Game/Interface.h"
+#include "../include/Snake-Game/interface.h"
 
-int main(){
-    return 0;
+int main(int argc, char *argv[])
+{
+	std::cout << "Hello world!" << std::endl;
 }
