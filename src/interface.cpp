@@ -1,4 +1,4 @@
-#include "Snake-Game/interface.h"
+#include "Snake-Game/Interface.h"
 #include <ncurses.h>
 
 int getKeyCodeFromKeyboard() {

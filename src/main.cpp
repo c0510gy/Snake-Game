@@ -1,6 +1,6 @@
 #include <iostream>
+#include "Snake-Game/Interface.h"
 
-#include "Snake-Game/interface.h"
 // for testing
 #include <ncurses.h>
 #define WORLD_WIDTH 50
