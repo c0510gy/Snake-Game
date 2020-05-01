@@ -7,5 +7,4 @@
 #define SNAKE_GAME
 
 
-
 #endif

@@ -1,34 +1,48 @@
-CC := g++ # This is the main compiler
-# CC := clang --analyze # and comment out the linker last line for sanity
-SRCDIR := src
+CC		:= g++
+CFLAGS	:= -std=c++14 -Wall -Wextra -g -lnCurses
+
+BIN		:= bin
+SRC		:= src
 BUILDDIR := build
-TARGET := bin/runner
+INCLUDE	:= include
+LIB		:= lib
 
 SRCEXT := cpp
-SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
-OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
-CFLAGS := -g # -Wall
-LIB := -pthread -lmongoclient -L lib -lboost_thread-mt -lboost_filesystem-mt -lboost_system-mt
-INC := -I include
 
-$(TARGET): $(OBJECTS)
-  @echo " Linking..."
-  @echo " $(CC) $^ -o $(TARGET) $(LIB)"; $(CC) $^ -o $(TARGET) $(LIB)
+LIBRARIES	:=
 
-$(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
-  @mkdir -p $(BUILDDIR)
-  @echo " $(CC) $(CFLAGS) $(INC) -c -o $@ $<"; $(CC) $(CFLAGS) $(INC) -c -o $@ $<
+ifeq ($(OS),Windows_NT)
+EXECUTABLE	:= main.exe
+SOURCEDIRS	:= $(SRC)
+INCLUDEDIRS	:= $(INCLUDE)
+LIBDIRS		:= $(LIB)
+else
+EXECUTABLE	:= main.o
+SOURCEDIRS	:= $(shell find $(SRC) -type d)
+INCLUDEDIRS	:= $(shell find $(INCLUDE) -type d)
+LIBDIRS		:= $(shell find $(LIB) -type d)
+endif
 
-clean:
-  @echo " Cleaning..."; 
-  @echo " $(RM) -r $(BUILDDIR) $(TARGET)"; $(RM) -r $(BUILDDIR) $(TARGET)
+CINCLUDES	:= $(patsubst %,-I%, $(INCLUDEDIRS:%/=%))
+CLIBS		:= $(patsubst %,-L%, $(LIBDIRS:%/=%))
 
-# Tests
-tester:
-  $(CC) $(CFLAGS) test/tester.cpp $(INC) $(LIB) -o bin/tester
+SOURCES		:= $(wildcard $(patsubst %,%/*.$(SRCEXT), $(SOURCEDIRS)))
+OBJECTS		:= $(patsubst $(SOURCEDIRS)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
 
-# Spikes
-ticket:
-  $(CC) $(CFLAGS) spikes/ticket.cpp $(INC) $(LIB) -o bin/ticket
+all: $(BIN)/$(EXECUTABLE)
+
+$(BIN)/$(EXECUTABLE): $(OBJECTS)
+	@mkdir -p $(BIN)
+	$(CC) $(CFLAGS) $(CINCLUDES) $(CLIBS) $^ -o $@ $(LIBRARIES)
+
+$(BUILDDIR)/%.o: $(SOURCEDIRS)/%.$(SRCEXT)
+	@mkdir -p $(BUILDDIR)
+	@echo " $(CC) $(CFLAGS) $(CINCLUDES) -c -o $@ $<"; $(CC) $(CFLAGS) $(CINCLUDES) -c -o $@ $<
 
 .PHONY: clean
+clean:
+	-$(RM) $(BIN)/$(EXECUTABLE)
+	-$(RM) $(OBJECTS)
+
+run: all
+	./$(BIN)/$(EXECUTABLE)

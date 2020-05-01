@@ -1,5 +1,5 @@
 /* 
- * title: Interface.h
+ * title: interface.h
  * 
  */
 
@@ -8,5 +8,6 @@
 
 #include <ncurses.h>
 
+int getKeyCodeFromKeyboard();
 
 #endif
