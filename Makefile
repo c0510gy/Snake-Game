@@ -32,6 +32,7 @@ OBJECTS		:= $(patsubst $(SOURCEDIRS)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
 all: $(BIN)/$(EXECUTABLE)
 
 $(BIN)/$(EXECUTABLE): $(OBJECTS)
+	@mkdir -p $(BIN)
 	$(CC) $(CFLAGS) $(CINCLUDES) $(CLIBS) $^ -o $@ $(LIBRARIES)
 
 $(BUILDDIR)/%.o: $(SOURCEDIRS)/%.$(SRCEXT)
