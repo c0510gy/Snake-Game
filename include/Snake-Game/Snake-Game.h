@@ -75,7 +75,7 @@ private:
     std::vector<Point> portalCandidates;
 
     std::queue<std::pair<Point, int>> growthTimeQ, poisonTimeQ;
-    std::multiset<Point> itemsDeleted;
+    std::multiset<Point> itemsUsed;
     int numberOfGrowth = 0;
     int numberOfPoison = 0;
 
