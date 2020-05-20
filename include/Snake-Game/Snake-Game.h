@@ -7,6 +7,7 @@
 #define SNAKE_GAME
 
 #include <vector>
+#include <deque>
 #include <queue>
 #include <set>
 
@@ -15,6 +16,11 @@ struct Point{
     Point(int x=0, int y=0){
         this->x = x;
         this->y = y;
+    }
+    Point& operator+=(const Point& p){
+        x += p.x;
+        y += p.y;
+        return *this;
     }
     bool operator<(const Point& p) const{
         if(x == p.x)
@@ -41,15 +47,15 @@ enum Item{
     SANKE
 };
 
-int DIR[4][2] = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
+Point DIR[4] = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
 
 class Snake{
 private:
     int length = 3;
     int direction = 0;
-    std::vector<Point> snakeBody;
+    std::deque<Point> snakeBody;
 public:
-    Snake();
+    Snake(Point headPoint={0, 0}, int length=3, int direction=0);
 
     bool move();
     void growth();
