@@ -39,7 +39,7 @@ bool Snake::checkValidity(){
     }
     return ret;
 }
-bool Snake::move(std::vector<std::vector<Item>>& gameMap, std::vector<Point>& portals){
+bool Snake::move(int direction, std::vector<std::vector<Item>>& gameMap, std::vector<Point>& portals){
     Point newH = getNewHead();
     bool valid = true;
     switch(gameMap[newH.y][newH.x]){
@@ -104,12 +104,6 @@ bool Snake::checkPoint(Point p){
 }
 bool Snake::isInPortal(){
     return portalRemaining;
-}
-int Snake::getDirection(){
-    return direction;
-}
-void Snake::setDirection(int direction){
-    this->direction = direction;
 }
 
 GameRunner::GameRunner(const std::vector<std::vector<Item>>& gameMap, Point startPoint, int length=3, int direction=0){
@@ -204,8 +198,12 @@ void GameRunner::updatePortal(){
     portalTime = frames;
 }
 bool GameRunner::nextFrame(int direction){
-
+    if(!snake.move(direction, gameMap, portals))
+        return false;
+    
+    ++frames;
     updateGrowth();
     updatePoison();
     updatePortal();
+    return true;
 }

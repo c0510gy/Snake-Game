@@ -106,13 +106,10 @@ private:
 public:
     Snake(Point headPoint={0, 0}, int length=3, int direction=0);
 
-    bool move(std::vector<std::vector<Item>>& gameMap, std::vector<Point>& portals);
+    bool move(int direction, std::vector<std::vector<Item>>& gameMap, std::vector<Point>& portals);
 
     bool checkPoint(Point p);
     bool isInPortal();
-
-    int getDirection();
-    void setDirection(int direction);
 };
 
 class GameRunner{
