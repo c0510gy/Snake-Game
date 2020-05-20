@@ -6,6 +6,7 @@
 #ifndef SNAKE_GAME
 #define SNAKE_GAME
 
+#include <algorithm>
 #include <vector>
 #include <deque>
 #include <queue>
@@ -19,10 +20,18 @@ struct Point{
         this->x = x;
         this->y = y;
     }
+    bool isValid(int width, int height) const{
+        return x >= 0 && y >= 0 && x < width && y < height;
+    }
     Point& operator+=(const Point& p){
         x += p.x;
         y += p.y;
         return *this;
+    }
+    Point operator+(const Point& p) const{
+        Point ret = *this;
+        ret += p;
+        return ret;
     }
     bool operator<(const Point& p) const{
         if(x == p.x)
@@ -80,23 +89,27 @@ class Snake{
 private:
     int length = 3;
     int direction = 0;
+    int portalRemaining = 0;
     std::deque<Point> snakeBody;
     std::queue<Point> eraseQueue, insertQueue;
     std::set<Point> snakePoints;
-
+    
     Point getNewHead();
     void pushFront(Point body);
     void popBack();
     bool checkValidity();
+
+    void generalMove();
+    void growthMove();
+    void poisonMove();
+    void portalMove(Point p);
 public:
     Snake(Point headPoint={0, 0}, int length=3, int direction=0);
 
-    bool move();
-    bool growthMove();
-    bool poisonMove();
-    bool portal(Point p);
+    bool move(std::vector<std::vector<Item>>& gameMap, std::vector<Point>& portals);
 
     bool checkPoint(Point p);
+    bool isInPortal();
 
     int getDirection();
     void setDirection(int direction);
@@ -116,9 +129,8 @@ private:
     RandomGenerator randomGenerator;
 
     int totalNumberOfItemCandidates;
-    int totalNumberOfPortalCandidates;
     std::set<IndexedPoint> itemsCandidates;
-    std::set<IndexedPoint> portalCandidates;
+    std::vector<Point> portalCandidates;
 
     std::queue<std::pair<IndexedPoint, int>> growthTimeQ, poisonTimeQ;
     std::multiset<Point> itemsUsed;
@@ -136,7 +148,7 @@ private:
 public:
     GameRunner(const std::vector<std::vector<Item>>& gameMap, Point startPoint, int length=3, int direction=0);
 
-    bool nextFrame();
+    bool nextFrame(int direction);
 };
 
 #endif
