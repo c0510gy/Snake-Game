@@ -10,6 +10,8 @@
 #include <deque>
 #include <queue>
 #include <set>
+#include <cstdlib>
+#include <ctime>
 
 struct Point{
     int x, y;
@@ -37,6 +39,31 @@ struct Point{
     }
 };
 
+struct IndexedPoint{
+    int idx;
+    Point p;
+    bool operator<(const IndexedPoint& ip) const{
+        return idx < ip.idx;
+    }
+    bool operator>(const IndexedPoint& ip) const{
+        return idx > ip.idx;
+    }
+    bool operator==(const IndexedPoint& ip) const{
+        return idx == ip.idx;
+    }
+};
+
+class RandomGenerator{
+private:
+public:
+    RandomGenerator(){
+        srand((unsigned)time(NULL));
+    }
+    int getRandom(int s, int e){
+        return rand() % (e - s + 1) + s;
+    }
+};
+
 enum Item{
     EMPTY,
     WALL,
@@ -60,14 +87,16 @@ private:
     Point getNewHead();
     void pushFront(Point body);
     void popBack();
-    bool checkBody();
+    bool checkValidity();
 public:
     Snake(Point headPoint={0, 0}, int length=3, int direction=0);
 
     bool move();
     bool growthMove();
     bool poisonMove();
-    void portal(int x, int y);
+    bool portal(Point p);
+
+    bool checkPoint(Point p);
 
     int getDirection();
     void setDirection(int direction);
@@ -78,16 +107,20 @@ private:
     std::vector<std::vector<Item>> gameMap;
     Snake snake;
 
-    int frams = 0;
+    int frames = 0;
 
     const int ITEM_MAX_TIME = 10;
     const int MAX_NUMBER_OF_GROWTH = 3;
     const int MAX_NUMBER_OF_POISON = 3;
 
-    std::vector<Point> itemsCandidates;
-    std::vector<Point> portalCandidates;
+    RandomGenerator randomGenerator;
 
-    std::queue<std::pair<Point, int>> growthTimeQ, poisonTimeQ;
+    int totalNumberOfItemCandidates;
+    int totalNumberOfPortalCandidates;
+    std::set<IndexedPoint> itemsCandidates;
+    std::set<IndexedPoint> portalCandidates;
+
+    std::queue<std::pair<IndexedPoint, int>> growthTimeQ, poisonTimeQ;
     std::multiset<Point> itemsUsed;
     int numberOfGrowth = 0;
     int numberOfPoison = 0;
@@ -95,11 +128,13 @@ private:
     int portalTime = -1;
     std::vector<Point> portals;
 
+    Point getRandomItemPoint(std::queue<std::pair<IndexedPoint, int>>& timeQ);
+
     void updateGrowth();
     void updatePoison();
     void updatePortal();
 public:
-    GameRunner(const std::vector<std::vector<Item>>& gameMap);
+    GameRunner(const std::vector<std::vector<Item>>& gameMap, Point startPoint, int length=3, int direction=0);
 
     bool nextFrame();
 };
