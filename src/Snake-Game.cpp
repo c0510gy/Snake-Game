@@ -1,12 +1,13 @@
 #include "Snake-Game/Snake-Game.h"
 
-Snake::Snake(Point headPoint, int length=3, int direction=0){
+Snake::Snake(MapManager& gameMap, Point headPoint, int length=3, int direction=0){
     this->length = length;
     this->direction = direction;
     portalRemaining = 0;
     for(int j = 0; j < length; ++j){
         snakeBody.push_back(headPoint);
         snakePoints.insert(headPoint);
+        gameMap.set(headPoint, SNAKE);
         headPoint += DIR[direction];
     }
 }
@@ -25,16 +26,18 @@ void Snake::popBack(){
     snakeBody.pop_back();
     --length;
 }
-bool Snake::checkValidity(){
+bool Snake::checkValidity(MapManager& gameMap){
     bool ret = true;
     while(!eraseQueue.empty()){
         snakePoints.erase(eraseQueue.front());
+        gameMap.set(eraseQueue.front(), EMPTY);
         eraseQueue.pop();
     }
     while(!insertQueue.empty()){
         if(snakePoints.find(insertQueue.front()) != snakePoints.end())
             ret = false;
         snakePoints.insert(insertQueue.front());
+        gameMap.set(insertQueue.front(), SNAKE);
         insertQueue.pop();
     }
     return ret;
@@ -72,7 +75,7 @@ bool Snake::move(int direction, MapManager& gameMap, std::vector<Point>& portals
             portalMove(teleportP);
             break;
     }
-    if(!checkValidity())
+    if(!checkValidity(gameMap))
         valid = false;
     return valid;
 }
@@ -108,8 +111,19 @@ bool Snake::isInPortal(){
 
 GameRunner::GameRunner(const MapManager& gameMap, Point startPoint, int length=3, int direction=0){
     this->gameMap = gameMap;
-    
-    snake = Snake(startPoint, length, direction);
+    for(int y = 0; y < this->gameMap.height; ++y){
+        for(int x = 0; x < this->gameMap.width; ++x){
+            switch(this->gameMap.get(x, y)){
+                case EMPTY:
+                    itemsCandidates.insert({totalNumberOfItemCandidates++, Point(x, y)});
+                    break;
+                case WALL:
+                    portalCandidates.push_back(Point(x, y));
+                    break;
+            }
+        }
+    }
+    snake = Snake(this->gameMap, startPoint, length, direction);
 }
 Point GameRunner::getRandomItemPoint(std::queue<std::pair<IndexedPoint, int>>& timeQ){
     IndexedPoint ip = {-1, {-1, -1}};
