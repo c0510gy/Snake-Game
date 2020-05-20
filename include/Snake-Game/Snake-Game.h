@@ -14,6 +14,18 @@
 #include <cstdlib>
 #include <ctime>
 
+enum Item{
+    ERROR,
+    EMPTY,
+    WALL,
+    IMWAll,
+    GATE,
+    GROWTH,
+    POISON,
+    SANKE,
+};
+Point DIR[4] = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
+
 struct Point{
     int x, y;
     Point(int x=0, int y=0){
@@ -62,6 +74,28 @@ struct IndexedPoint{
     }
 };
 
+struct MapManager{
+    int width, height;
+    std::vector<std::vector<Item>> gameMap;
+
+    Item get(int x, int y){
+        if(x < 0 || y < 0 || x >= width || y >= height)
+            return ERROR;
+        return gameMap[y][x];
+    }
+    Item get(Point p){
+        return get(p.x, p.y);
+    }
+    void set(int x, int y, Item v){
+        if(x < 0 || y < 0 || x >= width || y >= height)
+            return;
+        gameMap[y][x] = v;
+    }
+    void set(Point p, Item v){
+        set(p.x, p.y, v);
+    }
+};
+
 class RandomGenerator{
 private:
 public:
@@ -72,18 +106,6 @@ public:
         return rand() % (e - s + 1) + s;
     }
 };
-
-enum Item{
-    EMPTY,
-    WALL,
-    IMWAll,
-    GATE,
-    GROWTH,
-    POISON,
-    SANKE
-};
-
-Point DIR[4] = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
 
 class Snake{
 private:
@@ -106,7 +128,7 @@ private:
 public:
     Snake(Point headPoint={0, 0}, int length=3, int direction=0);
 
-    bool move(int direction, std::vector<std::vector<Item>>& gameMap, std::vector<Point>& portals);
+    bool move(int direction, MapManager& gameMap, std::vector<Point>& portals);
 
     bool checkPoint(Point p);
     bool isInPortal();
@@ -114,7 +136,7 @@ public:
 
 class GameRunner{
 private:
-    std::vector<std::vector<Item>> gameMap;
+    MapManager gameMap;
     Snake snake;
 
     int frames = 0;
@@ -143,7 +165,7 @@ private:
     void updatePoison();
     void updatePortal();
 public:
-    GameRunner(const std::vector<std::vector<Item>>& gameMap, Point startPoint, int length=3, int direction=0);
+    GameRunner(const MapManager& gameMap, Point startPoint, int length=3, int direction=0);
 
     bool nextFrame(int direction);
 };

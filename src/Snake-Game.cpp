@@ -39,10 +39,10 @@ bool Snake::checkValidity(){
     }
     return ret;
 }
-bool Snake::move(int direction, std::vector<std::vector<Item>>& gameMap, std::vector<Point>& portals){
+bool Snake::move(int direction, MapManager& gameMap, std::vector<Point>& portals){
     Point newH = getNewHead();
     bool valid = true;
-    switch(gameMap[newH.y][newH.x]){
+    switch(gameMap.get(newH)){
         case EMPTY:
             generalMove();
             break;
@@ -62,9 +62,9 @@ bool Snake::move(int direction, std::vector<std::vector<Item>>& gameMap, std::ve
             int dirIdx[] = {direction, (direction + 1) % 4, (direction - 1 + 4) % 4, (direction + 2) % 4};
             for(int idx: dirIdx){
                 teleportP = portal + DIR[idx];
-                if(!teleportP.isValid(gameMap.front().size(), gameMap.size()))
+                if(!teleportP.isValid(gameMap.width, gameMap.height))
                     continue;
-                if(gameMap[teleportP.y][teleportP.x] == EMPTY){
+                if(gameMap.get(teleportP) == EMPTY){
                     direction = idx;
                     break;
                 }
@@ -106,11 +106,8 @@ bool Snake::isInPortal(){
     return portalRemaining;
 }
 
-GameRunner::GameRunner(const std::vector<std::vector<Item>>& gameMap, Point startPoint, int length=3, int direction=0){
-    this->gameMap.resize(gameMap.size());
-    for(int y = 0; y < gameMap.size(); ++y)
-        for(int x = 0; x < gameMap[y].size(); ++x)
-            this->gameMap[y].push_back(gameMap[y][x]);
+GameRunner::GameRunner(const MapManager& gameMap, Point startPoint, int length=3, int direction=0){
+    this->gameMap = gameMap;
     
     snake = Snake(startPoint, length, direction);
 }
@@ -138,7 +135,7 @@ void GameRunner::updateGrowth(){
         auto itr = itemsUsed.find(t.p);
         if(itr == itemsUsed.end()){
             --numberOfGrowth;
-            gameMap[t.p.y][t.p.x] = EMPTY;
+            gameMap.set(t.p, EMPTY);
             itemsCandidates.insert(t);
         }else
             itemsUsed.erase(itr);
@@ -148,7 +145,7 @@ void GameRunner::updateGrowth(){
         Point p = getRandomItemPoint(growthTimeQ);
         if(p.x == -1 && p.y == -1)
             break;
-        gameMap[p.y][p.x] = GROWTH;
+        gameMap.set(p, GROWTH);
         ++numberOfGrowth;
     }
 }
@@ -160,7 +157,7 @@ void GameRunner::updatePoison(){
         auto itr = itemsUsed.find(t.p);
         if(itr == itemsUsed.end()){
             --numberOfPoison;
-            gameMap[t.p.y][t.p.x] = EMPTY;
+            gameMap.set(t.p, EMPTY);
             itemsCandidates.insert(t);
         }else
             itemsUsed.erase(itr);
@@ -170,7 +167,7 @@ void GameRunner::updatePoison(){
         Point p = getRandomItemPoint(poisonTimeQ);
         if(p.x == -1 && p.y == -1)
             break;
-        gameMap[p.y][p.x] = POISON;
+        gameMap.set(p, POISON);
         ++numberOfPoison;
     }
 }
@@ -178,7 +175,7 @@ void GameRunner::updatePortal(){
     if(snake.isInPortal() || portalCandidates.size() < 2 || portalTime + ITEM_MAX_TIME < frames)
         return;
     for(int j = 0; j < portals.size(); ++j)
-        gameMap[portals[j].y][portals[j].x] = WALL;
+        gameMap.set(portals[j], WALL);
     portals.clear();
 
     int cnt = randomGenerator.getRandom(0, 1);
@@ -194,13 +191,13 @@ void GameRunner::updatePortal(){
     portals.push_back(portalCandidates[idx1]);
     portals.push_back(portalCandidates[idx2]);
     for(int j = 0; j < portals.size(); ++j)
-        gameMap[portals[j].y][portals[j].x] = GATE;
+        gameMap.set(portals[j], GATE);
     portalTime = frames;
 }
 bool GameRunner::nextFrame(int direction){
     if(!snake.move(direction, gameMap, portals))
         return false;
-    
+
     ++frames;
     updateGrowth();
     updatePoison();
