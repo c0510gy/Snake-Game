@@ -54,12 +54,19 @@ private:
     int length = 3;
     int direction = 0;
     std::deque<Point> snakeBody;
+    std::queue<Point> eraseQueue, insertQueue;
+    std::set<Point> snakePoints;
+
+    Point getNewHead();
+    void pushFront(Point body);
+    void popBack();
+    bool checkBody();
 public:
     Snake(Point headPoint={0, 0}, int length=3, int direction=0);
 
     bool move();
-    void growth();
-    void poison();
+    bool growthMove();
+    bool poisonMove();
     void portal(int x, int y);
 
     int getDirection();

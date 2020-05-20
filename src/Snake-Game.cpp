@@ -5,29 +5,62 @@ Snake::Snake(Point headPoint, int length, int direction){
     this->direction = direction;
     for(int j = 0; j < length; ++j){
         snakeBody.push_back(headPoint);
+        snakePoints.insert(headPoint);
         headPoint += DIR[direction];
     }
 }
+Point Snake::getNewHead(){
+    Point newH = snakeBody.front();
+    newH += DIR[direction];
+    return newH;
+}
+void Snake::pushFront(Point body){
+    insertQueue.push(body);
+    snakeBody.push_front(body);
+    ++length;
+}
+void Snake::popBack(){
+    eraseQueue.push(snakeBody.back());
+    snakeBody.pop_back();
+    --length;
+}
+bool Snake::checkValidity(){
+    bool ret = true;
+    while(!eraseQueue.empty()){
+        snakePoints.erase(eraseQueue.front());
+        eraseQueue.pop();
+    }
+    while(!insertQueue.empty()){
+        if(snakePoints.find(insertQueue.front()) != snakePoints.end())
+            ret = false;
+        snakePoints.insert(insertQueue.front());
+        insertQueue.pop();
+    }
+    return ret;
+}
 bool Snake::move(){
-    Point newH = snakeBody.front();
-    newH += DIR[direction];
-    snakeBody.push_front(newH);
-    snakeBody.pop_back();
+    Point newH = getNewHead();
+    pushFront(newH);
+    popBack();
+    return checkValidity();
 }
-void Snake::growth(){
-    Point newH = snakeBody.front();
-    newH += DIR[direction];
-    snakeBody.push_front(newH);
+bool Snake::growthMove(){
+    Point newH = getNewHead();
+    pushFront(newH);
+    return checkValidity();
 }
-void Snake::poison(){
-    Point newH = snakeBody.front();
-    newH += DIR[direction];
-    snakeBody.push_front(newH);
-    snakeBody.pop_back();
-    snakeBody.pop_back();
+bool Snake::poisonMove(){
+    Point newH = getNewHead();
+    pushFront(newH);
+    popBack();
+    popBack();
+    return checkValidity();
 }
-void Snake::portal(int x, int y){
-
+bool Snake::portal(int x, int y){
+    Point newH = {x, y};
+    pushFront(newH);
+    popBack();
+    return checkValidity();
 }
 int Snake::getDirection(){
     return direction;
