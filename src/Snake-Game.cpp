@@ -1,6 +1,6 @@
 #include "Snake-Game/Snake-Game.h"
 
-Snake::Snake(MapManager& gameMap, Point headPoint, int length=3, int direction=0){
+Snake::Snake(MapManager& gameMap, Point headPoint, int length, int direction){
     this->length = length;
     this->direction = direction;
     portalRemaining = 0;
@@ -8,12 +8,12 @@ Snake::Snake(MapManager& gameMap, Point headPoint, int length=3, int direction=0
         snakeBody.push_back(headPoint);
         snakePoints.insert(headPoint);
         gameMap.set(headPoint, SNAKE);
-        headPoint += DIR[direction];
+        headPoint += DIRECTIONS[(direction + 2) % 4];
     }
 }
 Point Snake::getNewHead(){
     Point newH = snakeBody.front();
-    newH += DIR[direction];
+    newH += DIRECTIONS[direction];
     return newH;
 }
 void Snake::pushFront(Point body){
@@ -42,65 +42,66 @@ bool Snake::checkValidity(MapManager& gameMap){
     }
     return ret;
 }
-bool Snake::move(int direction, MapManager& gameMap, std::vector<Point>& portals){
+Item Snake::move(int direction, MapManager& gameMap, std::vector<Point>& portals){
+    this->direction = direction;
     Point newH = getNewHead();
-    bool valid = true;
+    Item ret = EMPTY;
+    if(gameMap.get(newH) == GATE){
+        Point portal = portals.front(), teleportP;
+        if(portal == newH)
+            portal = portals.back();
+        int dirIdx[] = {this->direction, (this->direction + 1) % 4, (this->direction - 1 + 4) % 4, (this->direction + 2) % 4};
+        for(int idx: dirIdx){
+            teleportP = portal + DIRECTIONS[idx];
+            if(!teleportP.isValid(gameMap.width, gameMap.height))
+                continue;
+            if(gameMap.get(teleportP) != WALL && gameMap.get(teleportP) != IMWALL && gameMap.get(teleportP) != GATE){
+                this->direction = idx;
+                break;
+            }
+        }
+        newH = teleportP;
+        portalRemaining = length;
+    }
     switch(gameMap.get(newH)){
+        case SNAKE:
         case EMPTY:
-            generalMove();
+            generalMove(newH);
             break;
         case GROWTH:
-            growthMove();
+            ret = GROWTH;
+            growthMove(newH);
             break;
         case POISON:
-            poisonMove();
+            ret = POISON;
+            poisonMove(newH);
             break;
         case WALL:
-            valid = false;
+            ret = ERROR;
             break;
         case GATE:
-            Point portal = portals.front(), teleportP;
-            if(portal == newH)
-                portal = portals.back();
-            int dirIdx[] = {direction, (direction + 1) % 4, (direction - 1 + 4) % 4, (direction + 2) % 4};
-            for(int idx: dirIdx){
-                teleportP = portal + DIR[idx];
-                if(!teleportP.isValid(gameMap.width, gameMap.height))
-                    continue;
-                if(gameMap.get(teleportP) == EMPTY){
-                    direction = idx;
-                    break;
-                }
-            }
-            portalMove(teleportP);
             break;
     }
     if(!checkValidity(gameMap))
-        valid = false;
-    return valid;
+        ret = ERROR;
+    return ret;
 }
-void Snake::generalMove(){
-    Point newH = getNewHead();
+void Snake::generalMove(Point newH){
     pushFront(newH);
     popBack();
     portalRemaining = std::max(0, portalRemaining - 1);
 }
-void Snake::growthMove(){
-    Point newH = getNewHead();
+void Snake::growthMove(Point newH){
     pushFront(newH);
 }
-void Snake::poisonMove(){
-    Point newH = getNewHead();
+void Snake::poisonMove(Point newH){
     pushFront(newH);
     popBack();
     popBack();
     portalRemaining = std::max(0, portalRemaining - 2);
 }
-void Snake::portalMove(Point p){
-    Point newH = p;
-    pushFront(newH);
-    popBack();
-    portalRemaining = length - 1;
+Point Snake::getHead(){
+    return snakeBody.front();
 }
 bool Snake::checkPoint(Point p){
     return snakePoints.find(p) != snakePoints.end();
@@ -109,7 +110,7 @@ bool Snake::isInPortal(){
     return portalRemaining;
 }
 
-GameRunner::GameRunner(const MapManager& gameMap, Point startPoint, int length=3, int direction=0){
+GameRunner::GameRunner(const MapManager& gameMap, Point startPoint, int length, int direction){
     this->gameMap = gameMap;
     for(int y = 0; y < this->gameMap.height; ++y){
         for(int x = 0; x < this->gameMap.width; ++x){
@@ -186,7 +187,7 @@ void GameRunner::updatePoison(){
     }
 }
 void GameRunner::updatePortal(){
-    if(snake.isInPortal() || portalCandidates.size() < 2 || portalTime + ITEM_MAX_TIME < frames)
+    if(snake.isInPortal() || portalCandidates.size() < 2 || portalTime + ITEM_MAX_TIME >= frames)
         return;
     for(int j = 0; j < portals.size(); ++j)
         gameMap.set(portals[j], WALL);
@@ -209,12 +210,21 @@ void GameRunner::updatePortal(){
     portalTime = frames;
 }
 bool GameRunner::nextFrame(int direction){
-    if(!snake.move(direction, gameMap, portals))
-        return false;
+    switch(snake.move(direction, gameMap, portals)){
+        case ERROR:
+            return false;
+        case GROWTH:
+        case POISON:
+            itemsUsed.insert(snake.getHead());
+            break;
+    }
 
     ++frames;
     updateGrowth();
     updatePoison();
     updatePortal();
     return true;
+}
+const MapManager& GameRunner::getMap(){
+    return gameMap;
 }

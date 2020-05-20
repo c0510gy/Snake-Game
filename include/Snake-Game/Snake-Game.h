@@ -18,13 +18,12 @@ enum Item{
     ERROR,
     EMPTY,
     WALL,
-    IMWAll,
+    IMWALL,
     GATE,
     GROWTH,
     POISON,
-    SANKE,
+    SNAKE,
 };
-Point DIR[4] = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
 
 struct Point{
     int x, y;
@@ -78,12 +77,19 @@ struct MapManager{
     int width, height;
     std::vector<std::vector<Item>> gameMap;
 
-    Item get(int x, int y){
+    MapManager(int width=0, int height=0){
+        this->width = width;
+        this->height = height;
+        gameMap.resize(height);
+        for(int y = 0; y < height; ++y)
+            gameMap[y].resize(width, EMPTY);
+    }
+    Item get(int x, int y) const{
         if(x < 0 || y < 0 || x >= width || y >= height)
             return ERROR;
         return gameMap[y][x];
     }
-    Item get(Point p){
+    Item get(Point p) const{
         return get(p.x, p.y);
     }
     void set(int x, int y, Item v){
@@ -95,6 +101,8 @@ struct MapManager{
         set(p.x, p.y, v);
     }
 };
+
+const Point DIRECTIONS[4] = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
 
 class RandomGenerator{
 private:
@@ -119,17 +127,18 @@ private:
     Point getNewHead();
     void pushFront(Point body);
     void popBack();
-    bool checkValidity();
+    bool checkValidity(MapManager& gameMap);
 
-    void generalMove();
-    void growthMove();
-    void poisonMove();
-    void portalMove(Point p);
+    void generalMove(Point newH);
+    void growthMove(Point newH);
+    void poisonMove(Point newH);
 public:
-    Snake(Point headPoint={0, 0}, int length=3, int direction=0);
+    Snake(){}
+    Snake(MapManager& gameMap, Point headPoint={0, 0}, int length=3, int direction=0);
 
-    bool move(int direction, MapManager& gameMap, std::vector<Point>& portals);
+    Item move(int direction, MapManager& gameMap, std::vector<Point>& portals);
 
+    Point getHead();
     bool checkPoint(Point p);
     bool isInPortal();
 };
@@ -147,7 +156,7 @@ private:
 
     RandomGenerator randomGenerator;
 
-    int totalNumberOfItemCandidates;
+    int totalNumberOfItemCandidates = 0;
     std::set<IndexedPoint> itemsCandidates;
     std::vector<Point> portalCandidates;
 
@@ -168,6 +177,7 @@ public:
     GameRunner(const MapManager& gameMap, Point startPoint, int length=3, int direction=0);
 
     bool nextFrame(int direction);
+    const MapManager& getMap();
 };
 
 #endif
