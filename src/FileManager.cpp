@@ -1,6 +1,6 @@
 /* 
  * title: FileManager.cpp
- * author: 
+ * author: ty
  */
 
 #include "Snake-Game/FileManager.h"
