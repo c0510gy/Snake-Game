@@ -9,10 +9,10 @@ FileManager::FileManager(){
 
 }
     
-void FileManager::writeMap(const MapManager& map, std::string filePath){
+void FileManager::writeMap(const MapItem& map, std::string filePath){
 
 }
-MapManager FileManager::readMap(std::string filePath){
+MapItem FileManager::readMap(std::string filePath){
 
 }
 

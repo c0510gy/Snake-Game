@@ -6,8 +6,9 @@
 #ifndef SNAKE_FILE_MANAGER
 #define SNAKE_FILE_MANAGER
 
-#include "MapManager.h"
-#include "UserManager.h"
+#include "Primitives/MapItem.h"
+#include "Primitives/MapManager.h"
+#include "Primitives/UserManager.h"
 #include <fstream>
 #include <string>
 
@@ -18,8 +19,8 @@ private:
 public:
     FileManager();
     
-    void writeMap(const MapManager& map, std::string filePath);
-    MapManager readMap(std::string filePath);
+    void writeMap(const MapItem& map, std::string filePath);
+    MapItem readMap(std::string filePath);
 
     void writeUser(const UserManager& user, std::string filePath);
     UserManager readUser(std::string filePath);
