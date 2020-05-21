@@ -39,6 +39,9 @@ $(BUILDDIR)/%.o: $(SOURCEDIRS)/%.$(SRCEXT)
 	@mkdir -p $(BUILDDIR)
 	@echo " $(CC) $(CFLAGS) $(CINCLUDES) -c -o $@ $<"; $(CC) $(CFLAGS) $(CINCLUDES) -c -o $@ $<
 
+tester: $(OBJECTS)
+	g++ -std=c++14 -Wall -Wextra -g -lnCurses test/test.cpp -Iinclude -Iinclude/Snake-Game -Llib build/Snake-Game.o build/interface.o -o test/test.o
+
 .PHONY: clean
 clean:
 	-$(RM) $(BIN)/$(EXECUTABLE)
