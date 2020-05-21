@@ -1,37 +1,125 @@
 #include <iostream>
-#include "Snake-Game/Interface.h"
-
-// for testing
+#include <fstream>
+#include <string>
 #include <ncurses.h>
-#define WORLD_WIDTH 50
-#define WORLD_HEIGHT 20
+#include "Snake-Game/Snake-Game.h"
 using namespace std;
+
 int main(int argc, char *argv[])
 {
-	WINDOW *snakeys_world;
-    int offsetx, offsety;
- 
+    ifstream inFile;
+    // 하 야발 이거 맥 특임.. 절대 경로 써줘야함
+    inFile.open("./map.txt");
+    Point startPoint;
+    int width, height;
+    inFile >> width >> height;
+    MapManager myMap(width, height);
+    inFile >> startPoint.x >> startPoint.y;
+    for (int y = 0; y < myMap.height; ++y)
+    {
+        string str;
+        inFile >> str;
+        for (int x = 0; x < myMap.width; ++x)
+        {
+            int v = str[x] - '0';
+            switch (v)
+            {
+            case 0:
+                myMap.set(x, y, EMPTY);
+                break;
+            case 1:
+                myMap.set(x, y, WALL);
+                break;
+            case 2:
+                myMap.set(x, y, IMWALL);
+                break;
+            }
+        }
+    }
+    cout << width << " " << height << endl;
+
+    // need to be refactored as class from below
+    GameRunner myGame(myMap, startPoint);
+    const MapManager nowMap = myGame.getMap();
+
     initscr();
-    refresh();
- 
-    offsetx = (COLS - WORLD_WIDTH) / 2;
-    offsety = (LINES - WORLD_HEIGHT) / 2;
- 
-    snakeys_world = newwin(WORLD_HEIGHT,
-                           WORLD_WIDTH,
-                           offsety,
-                           offsetx);
- 
-    box(snakeys_world, 0 , 0);
- 
-    wrefresh(snakeys_world);
- 
-    int a = getKeyCodeFromKeyboard();
- 
-    delwin(snakeys_world);
- 
+    noecho();
+    curs_set(0);
+    // nodelay(stdscr, true);
+
+    int maxHeight, maxWidth;
+    getmaxyx(stdscr, maxHeight, maxWidth);
+    if (nowMap.height > maxHeight || nowMap.width > maxWidth)
+    {
+        cout << nowMap.height << " " << nowMap.width << endl;
+        printf("exit");
+        return 0;
+    }
+
+
+    int direction = 2;
+    do
+    {
+        
+        for (int y = 0; y < nowMap.height; ++y)
+        {
+            for (int x = 0; x < nowMap.width; ++x)
+            {
+                move(x, y);
+                switch (nowMap.get(x, y))
+                {
+                case EMPTY:
+                    addch(' ');
+                    break;
+                case WALL:
+                case IMWALL:
+                    addch('#');
+                    break;
+                case SNAKE:
+                    addch('@');
+                    break;
+                case GROWTH:
+                    addch('+');
+                    break;
+                case POISON:
+                    addch('-');
+                    break;
+                case GATE:
+                    addch('O');
+                    break;
+                default:
+                    addch('?');
+                }
+            }
+        }
+        
+        int input = getch();
+        switch (input)
+        {
+        case KEY_LEFT:
+            direction = 0;
+            break;
+
+        case KEY_RIGHT:
+            direction = 1;
+            break;
+
+        case KEY_UP:
+            direction = 2;
+            break;
+
+        case KEY_DOWN:
+            direction = 3;
+            break;
+
+        default:
+            break;
+        }
+        printw("%d",direction);
+        refresh();
+    } while (myGame.nextFrame(direction));
+
     endwin();
- 
+
     return 0;
-	
 }
