@@ -1,6 +1,6 @@
 /* 
  * title: Primitives/Item.h
- * 
+ * author: 윤상건 - ggj06281@kookmin.ac.kr
  */
 
 #ifndef SNAKE_ITEM

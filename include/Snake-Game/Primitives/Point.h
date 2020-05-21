@@ -1,6 +1,6 @@
 /* 
  * title: Primitives/Point.h
- * 
+ * author: 윤상건 - ggj06281@kookmin.ac.kr
  */
 
 #ifndef SNAKE_POINT
