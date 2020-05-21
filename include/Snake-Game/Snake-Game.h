@@ -3,9 +3,12 @@
  * 
  */
 
-#ifndef SNAKE_GAME
-#define SNAKE_GAME
+#ifndef SNAKE_SNAKE_GAME
+#define SNAKE_SNAKE_GAME
 
+#include "Primitives/Item.h"
+#include "Primitives/Point.h"
+#include "Primitives/MapManager.h"
 #include <algorithm>
 #include <vector>
 #include <deque>
@@ -13,94 +16,6 @@
 #include <set>
 #include <cstdlib>
 #include <ctime>
-
-enum Item{
-    ERROR,
-    EMPTY,
-    WALL,
-    IMWALL,
-    GATE,
-    GROWTH,
-    POISON,
-    SNAKE,
-};
-
-struct Point{
-    int x, y;
-    Point(int x=0, int y=0){
-        this->x = x;
-        this->y = y;
-    }
-    bool isValid(int width, int height) const{
-        return x >= 0 && y >= 0 && x < width && y < height;
-    }
-    Point& operator+=(const Point& p){
-        x += p.x;
-        y += p.y;
-        return *this;
-    }
-    Point operator+(const Point& p) const{
-        Point ret = *this;
-        ret += p;
-        return ret;
-    }
-    bool operator<(const Point& p) const{
-        if(x == p.x)
-            return y < p.y;
-        return x < p.x;
-    }
-    bool operator>(const Point& p) const{
-        if(x == p.x)
-            return y > p.y;
-        return x > p.x;
-    }
-    bool operator==(const Point& p) const{
-        return x == p.x && y == p.y;
-    }
-};
-
-struct IndexedPoint{
-    int idx;
-    Point p;
-    bool operator<(const IndexedPoint& ip) const{
-        return idx < ip.idx;
-    }
-    bool operator>(const IndexedPoint& ip) const{
-        return idx > ip.idx;
-    }
-    bool operator==(const IndexedPoint& ip) const{
-        return idx == ip.idx;
-    }
-};
-
-struct MapManager{
-    int width, height;
-    std::vector<std::vector<Item>> gameMap;
-
-    MapManager(int width=0, int height=0){
-        this->width = width;
-        this->height = height;
-        gameMap.resize(height);
-        for(int y = 0; y < height; ++y)
-            gameMap[y].resize(width, EMPTY);
-    }
-    Item get(int x, int y) const{
-        if(x < 0 || y < 0 || x >= width || y >= height)
-            return ERROR;
-        return gameMap[y][x];
-    }
-    Item get(Point p) const{
-        return get(p.x, p.y);
-    }
-    void set(int x, int y, Item v){
-        if(x < 0 || y < 0 || x >= width || y >= height)
-            return;
-        gameMap[y][x] = v;
-    }
-    void set(Point p, Item v){
-        set(p.x, p.y, v);
-    }
-};
 
 const Point DIRECTIONS[4] = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
 
