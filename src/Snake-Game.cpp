@@ -215,6 +215,8 @@ bool GameRunner::nextFrame(int direction){
             return false;
         case GROWTH:
             --numberOfGrowth;
+            itemsUsed.insert(snake.getHead());
+            break;
         case POISON:
             --numberOfPoison;
             itemsUsed.insert(snake.getHead());
