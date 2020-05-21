@@ -151,9 +151,9 @@ void GameRunner::updateGrowth(){
         if(itr == itemsUsed.end()){
             --numberOfGrowth;
             gameMap.set(t.p, EMPTY);
-            itemsCandidates.insert(t);
         }else
             itemsUsed.erase(itr);
+        itemsCandidates.insert(t);
     }
     int cnt = randomGenerator.getRandom(0, MAX_NUMBER_OF_GROWTH - numberOfGrowth);
     for(int j = 0; j < cnt && !itemsCandidates.empty(); ++j){
@@ -173,9 +173,9 @@ void GameRunner::updatePoison(){
         if(itr == itemsUsed.end()){
             --numberOfPoison;
             gameMap.set(t.p, EMPTY);
-            itemsCandidates.insert(t);
         }else
             itemsUsed.erase(itr);
+        itemsCandidates.insert(t);
     }
     int cnt = randomGenerator.getRandom(0, MAX_NUMBER_OF_POISON - numberOfPoison);
     for(int j = 0; j < cnt && !itemsCandidates.empty(); ++j){
@@ -214,7 +214,9 @@ bool GameRunner::nextFrame(int direction){
         case ERROR:
             return false;
         case GROWTH:
+            --numberOfGrowth;
         case POISON:
+            --numberOfPoison;
             itemsUsed.insert(snake.getHead());
             break;
     }
