@@ -2,13 +2,13 @@
 #include <fstream>
 #include <string>
 #include <ncurses.h>
+#include <unistd.h>
 #include "Snake-Game/Snake-Game.h"
 using namespace std;
 
 int main(int argc, char *argv[])
 {
     ifstream inFile;
-    // 하 야발 이거 맥 특임.. 절대 경로 써줘야함
     inFile.open("./map.txt");
     Point startPoint;
     int width, height;
@@ -45,7 +45,8 @@ int main(int argc, char *argv[])
     initscr();
     noecho();
     curs_set(0);
-    // nodelay(stdscr, true);
+    nodelay(stdscr,true);
+    keypad(stdscr, true);
 
     int maxHeight, maxWidth;
     getmaxyx(stdscr, maxHeight, maxWidth);
@@ -56,11 +57,9 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-
-    int direction = 2;
-    do
+    while (1)
     {
-        
+        const MapManager nowMap = myGame.getMap();
         for (int y = 0; y < nowMap.height; ++y)
         {
             for (int x = 0; x < nowMap.width; ++x)
@@ -92,33 +91,41 @@ int main(int argc, char *argv[])
                 }
             }
         }
-        
+        int direction = 0;
         int input = getch();
         switch (input)
         {
-        case KEY_LEFT:
-            direction = 0;
-            break;
+            case KEY_LEFT:
+                direction = 1;
+                break;
 
-        case KEY_RIGHT:
-            direction = 1;
-            break;
+            case KEY_DOWN:
+                direction = 2;
+                break;
 
-        case KEY_UP:
-            direction = 2;
-            break;
+            case KEY_RIGHT:
+                direction = 3;
+                break;
 
-        case KEY_DOWN:
-            direction = 3;
-            break;
+            case KEY_UP:
+                direction = 0;
+                break;
 
-        default:
+            default:
+                break;
+        }
+
+        refresh();
+        printw("%d",direction);
+        if(!myGame.nextFrame(direction)) {
+            printw("breaked");
+            refresh();
             break;
         }
-        printw("%d",direction);
-        refresh();
-    } while (myGame.nextFrame(direction));
+    }
 
+    nodelay(stdscr, false);
+	getch();
     endwin();
 
     return 0;
