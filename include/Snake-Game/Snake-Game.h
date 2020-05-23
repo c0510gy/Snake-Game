@@ -9,6 +9,8 @@
 #include "Primitives/Item.h"
 #include "Primitives/Point.h"
 #include "Primitives/MapManager.h"
+#include "Primitives/MapItem.h"
+#include "FileManager.h"
 #include <algorithm>
 #include <vector>
 #include <deque>

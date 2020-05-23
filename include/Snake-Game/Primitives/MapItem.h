@@ -17,6 +17,7 @@ struct MapItem{
     std::string detail;
 
     MapManager gameMap;
+    Point startPoint;
 };
 
 #endif
