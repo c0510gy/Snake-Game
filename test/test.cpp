@@ -8,9 +8,11 @@ using namespace std;
 int main(){
     FileManager test;
     MapItem items = test.readMap("./testMap2.txt");
+    cout << items.name << "&" << items.author << endl;
+    cout << items.date << "&" << items.detail << endl;
     GameRunner myGame(items.gameMap, items.startPoint);
     int direction = 0;
-    cout << "started" << endl;
+    cout << "started2" << endl;
     do{
         cout << endl;
         const MapManager nowMap = myGame.getMap();
