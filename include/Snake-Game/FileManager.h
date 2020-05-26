@@ -12,8 +12,6 @@
 #include <fstream>
 #include <string>
 
-using namespace std;
-
 class FileManager{
 private:
     std::ofstream outFile;
@@ -22,11 +20,11 @@ public:
     // FileManager();
     // FileManager(string filePath);
     
-    void writeMap(const MapItem& map, string filePath);
+    void writeMap(const MapItem& map, std::string filePath);
     MapItem readMap(std::string filePath);
 
-    void writeUser(const UserManager& user, string filePath);
-    UserManager readUser(string filePath);
+    void writeUser(const UserManager& user, std::string filePath);
+    UserManager readUser(std::string filePath);
 };
 
 #endif
