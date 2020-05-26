@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
     initscr();
     noecho();
     curs_set(0);
-    nodelay(stdscr,true);
+    nodelay(stdscr,TRUE);
     keypad(stdscr, true);
 
     int maxHeight, maxWidth;
@@ -56,6 +56,8 @@ int main(int argc, char *argv[])
         printf("exit");
         return 0;
     }
+
+    int direction = 0;
 
     while (1)
     {
@@ -91,7 +93,6 @@ int main(int argc, char *argv[])
                 }
             }
         }
-        int direction = 0;
         int input = getch();
         switch (input)
         {
@@ -115,13 +116,14 @@ int main(int argc, char *argv[])
                 break;
         }
 
-        refresh();
         printw("%d",direction);
+        refresh();
         if(!myGame.nextFrame(direction)) {
             printw("breaked");
             refresh();
             break;
         }
+        usleep(500000);
     }
 
     nodelay(stdscr, false);
