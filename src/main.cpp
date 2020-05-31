@@ -47,7 +47,9 @@ int main(int argc, char *argv[])
     curs_set(0);
     nodelay(stdscr,TRUE);
     keypad(stdscr, true);
+
     start_color();
+    use_default_colors();
 
     if (has_colors() == FALSE) {
         endwin();
@@ -56,9 +58,9 @@ int main(int argc, char *argv[])
     }
 
     // define colors
-    init_pair(1, COLOR_RED, COLOR_RED);
-    init_pair(2, COLOR_GREEN, COLOR_GREEN);
-    init_pair(3, COLOR_WHITE, COLOR_MAGENTA);
+    init_pair(1, COLOR_WHITE, COLOR_WHITE); // wall
+    init_pair(2, COLOR_GREEN, -1); // snake
+    init_pair(3, COLOR_WHITE, COLOR_MAGENTA); // gate
 
     int maxHeight, maxWidth;
     getmaxyx(stdscr, maxHeight, maxWidth);
@@ -92,7 +94,7 @@ int main(int argc, char *argv[])
                     break;
                 case SNAKE:
                     attron(COLOR_PAIR(2));
-                    addch(' ');
+                    addch('@');
                     attroff(COLOR_PAIR(2));
                     break;
                 case GROWTH:
