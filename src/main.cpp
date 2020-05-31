@@ -47,6 +47,18 @@ int main(int argc, char *argv[])
     curs_set(0);
     nodelay(stdscr,TRUE);
     keypad(stdscr, true);
+    start_color();
+
+    if (has_colors() == FALSE) {
+        endwin();
+        printf("Your terminal does not support color\n");
+        exit(1);
+    }
+
+    // define colors
+    init_pair(1, COLOR_RED, COLOR_RED);
+    init_pair(2, COLOR_GREEN, COLOR_GREEN);
+    init_pair(3, COLOR_WHITE, COLOR_MAGENTA);
 
     int maxHeight, maxWidth;
     getmaxyx(stdscr, maxHeight, maxWidth);
@@ -54,7 +66,7 @@ int main(int argc, char *argv[])
     {
         cout << nowMap.height << " " << nowMap.width << endl;
         printf("exit");
-        return 0;
+        exit(1);
     }
 
     int direction = 0;
@@ -74,10 +86,14 @@ int main(int argc, char *argv[])
                     break;
                 case WALL:
                 case IMWALL:
-                    addch('#');
+                    attron(COLOR_PAIR(1));
+                    addch(' ');
+                    attroff(COLOR_PAIR(1));
                     break;
                 case SNAKE:
-                    addch('@');
+                    attron(COLOR_PAIR(2));
+                    addch(' ');
+                    attroff(COLOR_PAIR(2));
                     break;
                 case GROWTH:
                     addch('+');
@@ -86,7 +102,9 @@ int main(int argc, char *argv[])
                     addch('-');
                     break;
                 case GATE:
+                    attron(COLOR_PAIR(3));
                     addch('O');
+                    attroff(COLOR_PAIR(3));
                     break;
                 default:
                     addch('?');
