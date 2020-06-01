@@ -75,6 +75,29 @@ int main(int argc, char *argv[])
 
     while (1)
     {
+        int input = getch();
+        switch (input)
+        {
+            case KEY_LEFT:
+                direction = 1;
+                break;
+
+            case KEY_DOWN:
+                direction = 2;
+                break;
+
+            case KEY_RIGHT:
+                direction = 3;
+                break;
+
+            case KEY_UP:
+                direction = 0;
+                break;
+
+            default:
+                break;
+        }
+
         const MapManager nowMap = myGame.getMap();
         for (int y = 0; y < nowMap.height; ++y)
         {
@@ -113,30 +136,6 @@ int main(int argc, char *argv[])
                 }
             }
         }
-        int input = getch();
-        switch (input)
-        {
-            case KEY_LEFT:
-                direction = 1;
-                break;
-
-            case KEY_DOWN:
-                direction = 2;
-                break;
-
-            case KEY_RIGHT:
-                direction = 3;
-                break;
-
-            case KEY_UP:
-                direction = 0;
-                break;
-
-            default:
-                break;
-        }
-
-        printw("%d",direction);
         refresh();
         if(!myGame.nextFrame(direction)) {
             printw("breaked");
