@@ -1,7 +1,7 @@
-name = test
-author = sg
-date = 2020.1.20
-detail = is test
+name=test
+author=sg
+date=2020.1.20
+detail=is test
 W=10
 H=10
 startPointX=4
