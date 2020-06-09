@@ -27,7 +27,7 @@
 
 class GameManager {
 public:
-    GameManager(GameRunner gameRunner, MapItem mapItem);
+    GameManager(GameRunner gameRunner);
     ~GameManager();
     void play();
 private:

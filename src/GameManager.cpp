@@ -1,12 +1,10 @@
 #include "Snake-Game/GameManager.h"
 
-GameManager::GameManager(GameRunner gameRunner, MapItem mapItem): mGameRunner(gameRunner) {
+GameManager::GameManager(GameRunner gameRunner): mGameRunner(gameRunner) {
     initializeWindow();
     initializeColors();
     initializeScoreBoard();
     initializeGoalBoard();
-
-    initDirection = mapItem.startDirection;
 }
 
 GameManager::~GameManager() {
@@ -19,10 +17,10 @@ GameManager::~GameManager() {
 
 void GameManager::play() {
 
-    int direction = initDirection;
     while (1)
     {
         const MapManager mMapManager = mGameRunner.getMap();
+        int direction = mGameRunner.getDirection();
         //1. 입력 받고
         int input = getch();
         switch (input)
@@ -109,15 +107,15 @@ void GameManager::play() {
         // 딜레이 안주면 게임이 너무 빨리 진행됨.
         // 프레임 밀리는 현상이 이 함수 관련한거 같음
         // 아마 다른 방식으로 스레드에 락 주는 방식을 사용해야 할 것 같음
-        usleep(400000);
+        usleep(300000);
     }
 }
 
 void GameManager::initializeWindow() {
     initscr(); // ncurses 시작
     cbreak();
-    noecho(); // 커서 blink 없이
-    curs_set(0);
+    noecho(); 
+    curs_set(0); // 커서 blink 없이
     nodelay(stdscr,TRUE); // 입력 대기 없이(continuous 하게 게임 진행)
     keypad(stdscr, true); // 화살표 입력 받기 위해 
     
@@ -131,10 +129,12 @@ void GameManager::initializeWindow() {
 void GameManager::validateWindow() {
     
     const MapManager mMapManager = mGameRunner.getMap();
-    if (mMapManager.height > maxHeight || mMapManager.width > maxWidth)
-    {
+    int requiredHeight = mMapManager.height + WINDOW_OFFSET + SCORE_BOARD_HEIGHT + GOAL_BOARD_HEIGHT + 10;
+    int requiredWidth = mMapManager.width + WINDOW_OFFSET + SCORE_BOARD_WIDTH + SCORE_BOARD_HEIGHT + 10;
+    if (requiredHeight > maxHeight || requiredWidth > maxWidth) {
+
         move((maxHeight-2)/2,(maxWidth-5)/2);
-        printw("Window size should be bigger than %d X %d", maxHeight, maxWidth);
+        printw("Window size should be bigger than %d X %d", requiredHeight, requiredWidth);
         endwin();
         exit(1);
     }
