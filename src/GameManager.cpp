@@ -17,7 +17,7 @@ GameManager::~GameManager() {
 
 void GameManager::play() {
 
-    int direction = 0;
+    int direction = 1;
     while (1)
     {
         const MapManager mMapManager = mGameRunner.getMap();
@@ -26,19 +26,19 @@ void GameManager::play() {
         switch (input)
         {
             case KEY_LEFT:
-                direction = 1;
+                direction = 0;
                 break;
 
             case KEY_DOWN:
-                direction = 2;
-                break;
-
-            case KEY_RIGHT:
                 direction = 3;
                 break;
 
+            case KEY_RIGHT:
+                direction = 2;
+                break;
+
             case KEY_UP:
-                direction = 0;
+                direction = 1;
                 break;
 
             default:
@@ -53,7 +53,7 @@ void GameManager::play() {
                 // 커서 위치를 x,y로 이동 시킴.
                 // ncurses를 활용해 글을 쓰려면 다음 순서를 거쳐야함
                 // 1. 커서 이동(move) 2. write(addch)
-                move(x + WINDOW_OFFSET, y + WINDOW_OFFSET); 
+                move(y + WINDOW_OFFSET, x + WINDOW_OFFSET); 
                 switch (mMapManager.get(x, y))
                 {
                     case EMPTY:
@@ -89,6 +89,10 @@ void GameManager::play() {
                 }
             }
         }
+        // const StatusManager& mStatusManager = mGameRunner.getStatus();
+        // updateScoreStatus(mStatusManager.getScore());
+
+        // updateScoreStatus();
         //refresh를 invoke 해줘야 ncurses가 화면에 그려줌
         refresh();
         if(!mGameRunner.nextFrame(direction)) {
@@ -161,8 +165,15 @@ void GameManager::initializeScoreBoard() {
     // box(windowScoreBoard, 0, 0);
     wborder(windowScoreBoard, '|', '|', '-', '-', '+', '+', '+', '+');
     mvwprintw(windowScoreBoard, 0, 5, "Score");
+
+    mvwprintw(windowScoreBoard, 2, 1, "B: 3 / 10");
+    mvwprintw(windowScoreBoard, 3, 1, "+: 0");
+    mvwprintw(windowScoreBoard, 4, 1, "-: 0");
+    mvwprintw(windowScoreBoard, 5, 1, "G: 0");
+
     wrefresh(windowScoreBoard);
 }
+
 void GameManager::initializeGoalBoard() {
 
     refresh();
@@ -173,5 +184,30 @@ void GameManager::initializeGoalBoard() {
 
     wborder(windowGoalBoard, '|', '|', '-', '-', '+', '+', '+', '+');
     mvwprintw(windowGoalBoard, 0, 5 , "Goal");
+    mvwprintw(windowGoalBoard, 2, 1, "B: %d (%c)",10,' ');
+    mvwprintw(windowGoalBoard, 3, 1, "+: %d (%c)",7,' ');
+    mvwprintw(windowGoalBoard, 4, 1, "-: %d (%c)",5,'O');
+    mvwprintw(windowGoalBoard, 5, 1, "G: %d (%c)",3),' ';
+
     wrefresh(windowGoalBoard);
 }
+
+void GameManager::updateScoreStatus() {
+    mvwprintw(windowGoalBoard, 2, 1, "B: 3 / 7");
+    mvwprintw(windowGoalBoard, 3, 1, "+: 0");
+    mvwprintw(windowGoalBoard, 4, 1, "-: 0");
+    mvwprintw(windowGoalBoard, 5, 1, "G: 0");
+
+    wrefresh(windowScoreBoard);
+}
+
+void GameManager::updateMissionStatus(const Mission& mission) {
+    // mvwprintw(windowGoalBoard, indexOfSnakeScoreCurrentLength[1], indexOfSnakeScoreCurrentLength[0], "%d", mission.goalBody);
+    // mvwprintw(windowGoalBoard, indexOfPlusScore[1], indexOfPlusScore[0], "%d", score.scoreGrowth);
+    // mvwprintw(windowGoalBoard, indexOfMinusScore[1], indexOfMinusScore[0], "%d", score.scorePoison);
+    // mvwprintw(windowGoalBoard, indexOfGateScore[1], indexOfGateScore[0], "%d", score.scoreGate);
+
+    // wrefresh(windowGoalBoard);
+
+}
+
