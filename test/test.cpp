@@ -8,7 +8,7 @@ using namespace std;
 
 int main(){
     FileManager test;
-    MapItem items = test.readMap("./testMap2.txt");
+    MapItem items = test.readMap("./mapData/2.txt");
     UserItem users = test.readUser("hi"); 
     cout << "맵 이름: " << items.name << endl << "맵 설명: " << items.detail << endl;
     cout << "사용자 정보: " << users.name << " " << users.id << " " << users.highScore << endl;

@@ -22,8 +22,8 @@ public:
     void scorePoison();
     void scoreGate();
 
-    const Score& getScore();
-    const Mission& getMission();
+    const Score& getScore() const;
+    const Mission& getMission() const;
 };
 
 #endif

@@ -53,7 +53,7 @@ void GameManager::play() {
                 // 커서 위치를 x,y로 이동 시킴.
                 // ncurses를 활용해 글을 쓰려면 다음 순서를 거쳐야함
                 // 1. 커서 이동(move) 2. write(addch)
-                move(y + WINDOW_OFFSET, x + WINDOW_OFFSET); 
+                move(y + WINDOW_OFFSET, x + WINDOW_OFFSET);
                 switch (mMapManager.get(x, y))
                 {
                     case EMPTY:
