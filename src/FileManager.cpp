@@ -9,27 +9,46 @@
 // FileManager::FileManager()
 // {
 // }
+            
+void FileManager::writeMap(const MapItem &map, std::string filePath)
+{
+    outFile = std::ofstream(filePath);
 
-// void FileManager::writeMap(const MapItem &map, std::string filePath)
-// {
-//     outFile = std::ofstream(filePath);
-//         for(int y = 0; y < map.gameMap.height; ++y){
-//         std::string tmp = "";
-//         for(int x = 0; x < map.gameMap.width; ++x){
-//             switch(map.gameMap.get(x, y)){
-//                 case EMPTY:
-//                     tmp += "0";
-//                     break;
-//                 case WALL:
-//                     tmp += "1";
-//                     break;
-//                 case IMWALL:
-//                     tmp += "2";
-//                     break;
-//             }
-//         }
-//     }
-// }
+    outFile << "name=" << map.name << "\n";
+    outFile << "author=" << map.author << "\n";
+    outFile << "date=" << map.date << "\n";
+    outFile << "detail=" << map.detail << "\n";
+    outFile << "W=" << map.gameMap.width << "\n";
+    outFile << "H=" << map.gameMap.height << "\n";
+    outFile << "startPointX=" << map.startPoint.x << "\n";
+    outFile << "startPointY=" << map.startPoint.y << "\n";
+    outFile << "startDirection=" << map.startDirection << "\n";
+    outFile << "goalBody=" << map.goalBody << "\n";
+    outFile << "goalGrowth=" << map.goalGrowth << "\n";
+    outFile << "goalPoison=" << map.goalPoison << "\n";  
+    outFile << "goalGate=" << map.goalGate << "\n";
+    outFile << "MAX_SCORE_BODY=" << map.MAX_SCORE_BODY << "\n";
+    outFile << "mapData=" << map.MAX_SCORE_BODY << "\n";
+
+    for(int y = 0; y < map.gameMap.height; ++y){
+        std::string tmp = "";
+        for(int x = 0; x < map.gameMap.width; ++x){
+            switch(map.gameMap.get(x, y)){
+                case EMPTY:
+                    tmp += "0";
+                    break;
+                case WALL:
+                    tmp += "1";
+                    break;
+                case IMWALL:
+                    tmp += "2";
+                    break;
+            }
+        }
+        outFile << tmp << "\n";
+    }
+    outFile.close();
+}
 
 bool FileManager::isFileExist(std::string filePath){
     std::ifstream inFile(filePath);
@@ -75,7 +94,7 @@ MapItem FileManager::readMap(std::string filePath)
                 items.goalBody = stoi(value);
             else if (key == "goalGrowth")
                 items.goalGrowth = stoi(value);
-            else if (key == "goalBody")
+            else if (key == "goalPoison")
                 items.goalPoison = stoi(value);
             else if (key == "goalGate")
                 items.goalGate = stoi(value);
@@ -112,8 +131,10 @@ MapItem FileManager::readMap(std::string filePath)
             }
             items.gameMap = myMap;
         }
+        inFile.close();
         return items;
     }
+    inFile.close();
     return items;
 }
 
@@ -125,6 +146,7 @@ void FileManager::writeUser(const UserItem &user){
         outFile << "userName=" << user.name << "\n";
         outFile << "userHighScore=" << user.highScore;
     }
+    outFile.close();
 }
 
 UserItem FileManager::readUser(std::string userId)
@@ -147,6 +169,7 @@ UserItem FileManager::readUser(std::string userId)
             else if (key == "userHighScore")
                 user.highScore = std::stoi(value);
         }
+        inFile.close();
     }
     return user;
 }
