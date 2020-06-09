@@ -23,19 +23,19 @@ void GameManager::play() {
         switch (input)
         {
             case KEY_LEFT:
-                direction = 1;
+                direction = 0;
                 break;
 
             case KEY_DOWN:
-                direction = 2;
-                break;
-
-            case KEY_RIGHT:
                 direction = 3;
                 break;
 
+            case KEY_RIGHT:
+                direction = 2;
+                break;
+
             case KEY_UP:
-                direction = 0;
+                direction = 1;
                 break;
 
             default:
@@ -52,7 +52,7 @@ void GameManager::play() {
                 // 커서 위치를 x,y로 이동 시킴.
                 // ncurses를 활용해 글을 쓰려면 다음 순서를 거쳐야함
                 // 1. 커서 이동(move) 2. write(addch)
-                move(x, y); 
+                move(y, x); 
                 switch (mMapManager.get(x, y))
                 {
                     case EMPTY:
