@@ -37,3 +37,6 @@
 # Directories
 bin/
 build/
+
+# Vscode
+.vscode
