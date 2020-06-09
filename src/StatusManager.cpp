@@ -43,9 +43,9 @@ void StatusManager::scoreGate(){
         mission.achGate = true;
 }
 
-const Score& StatusManager::getScore(){
+const Score& StatusManager::getScore() const{
     return score;
 }
-const Mission& StatusManager::getMission(){
+const Mission& StatusManager::getMission() const{
     return mission;
 }

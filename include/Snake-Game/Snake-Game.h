@@ -37,6 +37,8 @@ public:
 
 class Snake{
 private:
+    int MAX_LENGTH = 10;                 // 현재 Snake의 최대 길이
+
     int length = 3;                            // 현재 Snake의 길이
     int direction = 0;                         // 현재 Snake의 이동 방향
     int portalRemaining = 0;                   // 현재 Snake가 portal에 의해 이동되지 않은 길이
@@ -54,7 +56,7 @@ private:
     void poisonMove(Point newH);               // 위치 newH로 독 이동 - Poison 아이템 효과
 public:
     Snake(){}
-    Snake(MapManager& gameMap, Point headPoint={0, 0}, int length=3, int direction=0);
+    Snake(MapManager& gameMap, Point headPoint={0, 0}, int length=3, int direction=0, int MAX_LENGTH=10);
 
     // direction방향으로 portals의 포탈을 가진 gameMap맵에서 이동연산 수행
     // 섭취한 아이템을 반환, 유효하지 않은 상황이 발생할 경우 ERROR 반환

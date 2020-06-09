@@ -5,7 +5,7 @@
 
 #include "Snake-Game/Snake-Game.h"
 
-Snake::Snake(MapManager& gameMap, Point headPoint, int length, int direction){
+Snake::Snake(MapManager& gameMap, Point headPoint, int length, int direction, int MAX_LENGTH): MAX_LENGTH(MAX_LENGTH){
     this->length = length;
     this->direction = direction;
     portalRemaining = 0;
@@ -94,6 +94,8 @@ Item Snake::move(int direction, MapManager& gameMap, StatusManager& status, std:
         case GATE:
             break;
     }
+    while(length > MAX_LENGTH)
+        popBack();
     if(!checkValidity(gameMap))
         ret = ERROR;
     return ret;
@@ -137,7 +139,7 @@ GameRunner::GameRunner(const MapItem& gameMapInfo, int length, int direction):
             }
         }
     }
-    snake = Snake(this->gameMap, gameMapInfo.startPoint, length, direction);
+    snake = Snake(this->gameMap, gameMapInfo.startPoint, length, direction, gameMapInfo.MAX_SCORE_BODY);
 }
 Point GameRunner::getRandomItemPoint(std::queue<std::pair<IndexedPoint, int>>& timeQ){
     IndexedPoint ip = {-1, {-1, -1}};
