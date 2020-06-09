@@ -45,9 +45,11 @@ bool Snake::checkValidity(MapManager& gameMap){
         gameMap.set(insertQueue.front(), SNAKE);
         insertQueue.pop();
     }
+    if(length < 3)
+        ret = false;
     return ret;
 }
-Item Snake::move(int direction, MapManager& gameMap, std::vector<Point>& portals){
+Item Snake::move(int direction, MapManager& gameMap, StatusManager& status, std::vector<Point>& portals){
     this->direction = direction;
     Point newH = getNewHead();
     Item ret = EMPTY;
@@ -67,6 +69,7 @@ Item Snake::move(int direction, MapManager& gameMap, std::vector<Point>& portals
         }
         newH = teleportP;
         portalRemaining = length;
+        status.scoreGate();
     }
     switch(gameMap.get(newH)){
         case SNAKE:
@@ -76,10 +79,14 @@ Item Snake::move(int direction, MapManager& gameMap, std::vector<Point>& portals
         case GROWTH:
             ret = GROWTH;
             growthMove(newH);
+            status.scoreGrowth();
+            status.scoreBody();
             break;
         case POISON:
             ret = POISON;
             poisonMove(newH);
+            status.scorePoison();
+            status.descoreBody();
             break;
         case WALL:
             ret = ERROR;
@@ -115,8 +122,9 @@ bool Snake::isInPortal(){
     return portalRemaining;
 }
 
-GameRunner::GameRunner(const MapManager& gameMap, Point startPoint, int length, int direction){
-    this->gameMap = gameMap;
+GameRunner::GameRunner(const MapItem& gameMapInfo, int length, int direction):
+    status(StatusManager(gameMapInfo.MAX_SCORE_BODY, gameMapInfo.goalBody, gameMapInfo.goalGrowth, gameMapInfo.goalPoison, gameMapInfo.goalGate)){
+    this->gameMap = gameMapInfo.gameMap;
     for(int y = 0; y < this->gameMap.height; ++y){
         for(int x = 0; x < this->gameMap.width; ++x){
             switch(this->gameMap.get(x, y)){
@@ -129,7 +137,7 @@ GameRunner::GameRunner(const MapManager& gameMap, Point startPoint, int length, 
             }
         }
     }
-    snake = Snake(this->gameMap, startPoint, length, direction);
+    snake = Snake(this->gameMap, gameMapInfo.startPoint, length, direction);
 }
 Point GameRunner::getRandomItemPoint(std::queue<std::pair<IndexedPoint, int>>& timeQ){
     IndexedPoint ip = {-1, {-1, -1}};
@@ -215,7 +223,7 @@ void GameRunner::updatePortal(){
     portalTime = frames;
 }
 bool GameRunner::nextFrame(int direction){
-    switch(snake.move(direction, gameMap, portals)){
+    switch(snake.move(direction, gameMap, status, portals)){
         case ERROR:
             return false;
         case GROWTH:
@@ -236,4 +244,7 @@ bool GameRunner::nextFrame(int direction){
 }
 const MapManager& GameRunner::getMap(){
     return gameMap;
+}
+const StatusManager& GameRunner::getStatus(){
+    return status;
 }
