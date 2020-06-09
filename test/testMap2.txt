@@ -6,6 +6,11 @@ W=10
 H=10
 startPointX=4
 startPointY=4
+goalBody=10
+goalGrowth=5
+goalPoison=2
+goalGate=1
+MAX_SCORE_BODY=10
 mapData=
 2111111112
 1000000001
