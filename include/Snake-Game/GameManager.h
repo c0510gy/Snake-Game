@@ -13,10 +13,14 @@
 #include <unistd.h>
 #include "Snake-Game.h"
 
+#define WINDOW_OFFSET 3
+
 #define SCORE_BOARD_WIDTH 15
 #define SCORE_BOARD_HEIGHT 10
 
-#define WINDOW_OFFSET 3
+#define GOAL_BOARD_WIDTH 15
+#define GOAL_BOARD_HEIGHT 10
+
 
 class GameManager {
 public:
@@ -29,12 +33,14 @@ private:
     GameRunner mGameRunner;
 
     WINDOW *windowScoreBoard;
+    WINDOW *windowGoalBoard;
 
     void initializeWindow();
     bool validateWindow();
     void initializeColors();
 
     void initializeScoreBoard();
+    void initializeGoalBoard();
 };
 
 #endif

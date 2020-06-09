@@ -4,12 +4,14 @@ GameManager::GameManager(GameRunner gameRunner): mGameRunner(gameRunner) {
     initializeWindow();
     initializeColors();
     initializeScoreBoard();
+    initializeGoalBoard();
 }
 
 GameManager::~GameManager() {
     nodelay(stdscr, false);
     getch();
     delwin(windowScoreBoard);
+    delwin(windowGoalBoard);
     endwin();
 }
 
@@ -103,7 +105,6 @@ void GameManager::play() {
 }
 
 void GameManager::initializeWindow() {
-    setlocale(LC_ALL, "");
     initscr(); // ncurses 시작
     noecho(); // 커서 blink 없이
     curs_set(0);
@@ -152,13 +153,25 @@ void GameManager::initializeColors() {
 void GameManager::initializeScoreBoard() {
 
     refresh();
-    int offsetx = gameMapWidth + SCORE_BOARD_WIDTH + 5;
-    int offsety = 3;
+    int offsetx = gameMapWidth + WINDOW_OFFSET + SCORE_BOARD_WIDTH + 5;
+    int offsety = WINDOW_OFFSET;
 
     windowScoreBoard = newwin(SCORE_BOARD_HEIGHT, SCORE_BOARD_WIDTH, offsety, offsetx);
 
     // box(windowScoreBoard, 0, 0);
     wborder(windowScoreBoard, '|', '|', '-', '-', '+', '+', '+', '+');
-    mvwprintw(windowScoreBoard, 0, 2, "Scoreboard");
+    mvwprintw(windowScoreBoard, 0, 5, "Score");
     wrefresh(windowScoreBoard);
+}
+void GameManager::initializeGoalBoard() {
+
+    refresh();
+    int offsetx = gameMapWidth + WINDOW_OFFSET + GOAL_BOARD_WIDTH + 5;
+    int offsety = WINDOW_OFFSET + GOAL_BOARD_HEIGHT + 1;
+
+    windowGoalBoard = newwin(GOAL_BOARD_HEIGHT, GOAL_BOARD_WIDTH, offsety, offsetx);
+
+    wborder(windowGoalBoard, '|', '|', '-', '-', '+', '+', '+', '+');
+    mvwprintw(windowGoalBoard, 0, 5 , "Goal");
+    wrefresh(windowGoalBoard);
 }
