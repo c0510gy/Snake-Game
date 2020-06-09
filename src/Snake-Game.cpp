@@ -123,6 +123,9 @@ bool Snake::checkPoint(Point p){
 bool Snake::isInPortal(){
     return portalRemaining;
 }
+int Snake::getDirection(){
+    return direction;
+}
 
 GameRunner::GameRunner(const MapItem& gameMapInfo, int length):
     status(StatusManager(gameMapInfo.MAX_SCORE_BODY, gameMapInfo.goalBody, gameMapInfo.goalGrowth, gameMapInfo.goalPoison, gameMapInfo.goalGate)){
@@ -250,4 +253,7 @@ const MapManager& GameRunner::getMap(){
 }
 const StatusManager& GameRunner::getStatus(){
     return status;
+}
+int GameRunner::getDirection(){
+    return snake.getDirection();
 }

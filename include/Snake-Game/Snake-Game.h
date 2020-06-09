@@ -65,6 +65,7 @@ public:
     Point getHead();            // 현재 Snake의 머리(head)의 좌표를 반환
     bool checkPoint(Point p);   // 위치 p가 Snake가 존재하는 위치에 속하는지 여부를 반환
     bool isInPortal();          // 현재 Snake가 Portal를 타고 있는지 여부를 반환
+    int getDirection();
 };
 
 class GameRunner{
@@ -75,7 +76,7 @@ private:
 
     int frames = 0;                         // 현재 진행중인 게임의 frame 수
 
-    const int ITEM_MAX_TIME = 10;           // 아이템이 사라지지 않는 시간
+    const int ITEM_MAX_TIME = 100;           // 아이템이 사라지지 않는 시간
     const int MAX_NUMBER_OF_GROWTH = 3;     // Growth 아이템의 출현 최대 개수
     const int MAX_NUMBER_OF_POISON = 3;     // Poison 아이템의 출현 최대 개수
 
@@ -107,6 +108,7 @@ public:
     bool nextFrame(int direction);          // Snake가 direction방향으로 이동하는 다음 프레임을 계산하고 game over여부를 반환
     const MapManager& getMap();             // 현재 진행중인 게임의 맵을 반환
     const StatusManager& getStatus();       // 현재 진행중인 게임의 상태 (점수, 미션) 반환
+    int getDirection();                     // 현재 Snake의 진행중인 방향 반환
 };
 
 #endif
