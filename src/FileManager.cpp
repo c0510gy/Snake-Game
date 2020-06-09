@@ -52,6 +52,16 @@ MapItem FileManager::readMap(std::string filePath)
                 items.startPoint.x = stoi(value);
             else if (key == "startPointY")
                 items.startPoint.y = stoi(value);
+            else if (key == "goalBody")
+                items.goalBody = stoi(value);
+            else if (key == "goalGrowth")
+                items.goalGrowth = stoi(value);
+            else if (key == "goalBody")
+                items.goalPoison = stoi(value);
+            else if (key == "goalGate")
+                items.goalGate = stoi(value);
+            else if (key == "MAX_SCORE_BODY")
+                items.MAX_SCORE_BODY = stoi(value);
             else if (key == "mapData")
             {
                 mapDataflag = true;
