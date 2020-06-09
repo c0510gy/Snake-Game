@@ -4,7 +4,6 @@
  */
 
 #include "Snake-Game/FileManager.h"
-using namespace std;
 #include <iostream>
 
 // FileManager::FileManager()
@@ -15,22 +14,22 @@ using namespace std;
 // {
 // }
 
-MapItem FileManager::readMap(string filePath)
+MapItem FileManager::readMap(std::string filePath)
 {
     int width, height;
     struct MapItem items;
 
-    ifstream inFile(filePath);
+    std::ifstream inFile(filePath);
     if (inFile.is_open())
     {
-        string lineScan;
+        std::string lineScan;
         bool mapDataflag = false;
-        while (getline(inFile, lineScan))
+        while (std::getline(inFile, lineScan))
         {
 
             int separatorIdx = lineScan.find("=");
-            string key = lineScan.substr(0, separatorIdx);
-            string value = lineScan.substr(separatorIdx + 1);
+            std::string key = lineScan.substr(0, separatorIdx);
+            std::string value = lineScan.substr(separatorIdx + 1);
 
             if (key == "name")
                 items.name = value;
@@ -84,9 +83,18 @@ MapItem FileManager::readMap(string filePath)
     return items;
 }
 
-// void FileManager::writeUser(const UserManager &user, string filePath)
-// {
-// }
+void FileManager::writeUser(const UserManager &user, std::string filePath)
+{
+    std::ifstream inFile(filePath);
+    if (inFile.is_open())
+    {
+    }
+    else{
+        std::ofstream out(filePath);
+
+    }
+    
+}
 // UserManager FileManager::readUser(string filePath)
 // {
 // }
