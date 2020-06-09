@@ -16,6 +16,12 @@ struct MapItem{
     std::string date;
     std::string detail;
 
+    int goalBody;
+    int goalGrowth;
+    int goalPoison;
+    int goalGate;
+    int MAX_SCORE_BODY;
+
     MapManager gameMap;
     Point startPoint;
 };
