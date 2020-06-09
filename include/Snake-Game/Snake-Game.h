@@ -11,6 +11,7 @@
 #include "Primitives/MapManager.h"
 #include "Primitives/MapItem.h"
 #include "Primitives/UserItem.h"
+#include "StatusManager.h"
 #include "FileManager.h"
 #include <algorithm>
 #include <vector>
@@ -57,7 +58,7 @@ public:
 
     // direction방향으로 portals의 포탈을 가진 gameMap맵에서 이동연산 수행
     // 섭취한 아이템을 반환, 유효하지 않은 상황이 발생할 경우 ERROR 반환
-    Item move(int direction, MapManager& gameMap, std::vector<Point>& portals);
+    Item move(int direction, MapManager& gameMap, StatusManager& status, std::vector<Point>& portals);
 
     Point getHead();            // 현재 Snake의 머리(head)의 좌표를 반환
     bool checkPoint(Point p);   // 위치 p가 Snake가 존재하는 위치에 속하는지 여부를 반환
@@ -68,6 +69,7 @@ class GameRunner{
 private:
     MapManager gameMap;                     // 현재 진행중인 게임의 맵 객체
     Snake snake;                            // 현재 진행중인 게임의 Snake 객체
+    StatusManager status;
 
     int frames = 0;                         // 현재 진행중인 게임의 frame 수
 
@@ -102,6 +104,7 @@ public:
 
     bool nextFrame(int direction);          // Snake가 direction방향으로 이동하는 다음 프레임을 계산하고 game over여부를 반환
     const MapManager& getMap();             // 현재 진행중인 게임의 맵을 반환
+    
 };
 
 #endif
