@@ -34,8 +34,6 @@ private:
     int maxHeight, maxWidth;
     int gameMapHeight, gameMapWidth;
 
-    int initDirection; // 처음 어느 방향부터 시작해야하나
-
     GameRunner mGameRunner;
 
     WINDOW *windowScoreBoard;
