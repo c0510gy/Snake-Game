@@ -33,6 +33,7 @@
 
 # Mac
 .DS_Store
+*.dSYM
 
 # Directories
 bin/

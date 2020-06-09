@@ -1,3 +1,8 @@
+/* 
+ * title: Snake-Game.cpp
+ * author: 윤상건 - ggj06281@kookmin.ac.kr
+ */
+
 #include "Snake-Game/Snake-Game.h"
 
 Snake::Snake(MapManager& gameMap, Point headPoint, int length, int direction){
