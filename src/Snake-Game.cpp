@@ -139,6 +139,7 @@ GameRunner::GameRunner(const MapItem& gameMapInfo, int length, int direction):
             }
         }
     }
+    for(int i = 0; i < length; ++i) status.scoreBody();
     snake = Snake(this->gameMap, gameMapInfo.startPoint, length, direction, gameMapInfo.MAX_SCORE_BODY);
 }
 Point GameRunner::getRandomItemPoint(std::queue<std::pair<IndexedPoint, int>>& timeQ){
