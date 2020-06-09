@@ -11,7 +11,9 @@ int main(){
     MapItem items = test.readMap("./testMap2.txt");
     UserItem users = test.readUser("hi"); 
     cout << "맵 이름: " << items.name << endl << "맵 설명: " << items.detail << endl;
-    cout << users.name << " " << users.id << " " << users.highScore << endl;
+    cout << "사용자 정보: " << users.name << " " << users.id << " " << users.highScore << endl;
+    cout << "B:" << items.goalBody << " +:" << items.goalGrowth << " -:" 
+         << items.goalPoison << " G:" << items.goalGate << " MAXLEN:" << items.MAX_SCORE_BODY << endl;
     GameRunner myGame(items.gameMap, items.startPoint);
     int direction = 0;
     cout << "started!!" << endl;
