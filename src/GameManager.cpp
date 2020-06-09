@@ -3,18 +3,21 @@
 GameManager::GameManager(GameRunner gameRunner): mGameRunner(gameRunner) {
     initializeWindow();
     initializeColors();
+    initializeScoreBoard();
+    initializeGoalBoard();
 }
 
 GameManager::~GameManager() {
     nodelay(stdscr, false);
     getch();
+    delwin(windowScoreBoard);
+    delwin(windowGoalBoard);
     endwin();
 }
 
 void GameManager::play() {
-    
 
-    int direction = 0;
+    int direction = 1;
     while (1)
     {
         const MapManager mMapManager = mGameRunner.getMap();
@@ -42,8 +45,6 @@ void GameManager::play() {
                 break;
         }
         
-        
-
         // 3. 그려주고
         for (int y = 0; y < mMapManager.height; ++y)
         {
@@ -52,7 +53,7 @@ void GameManager::play() {
                 // 커서 위치를 x,y로 이동 시킴.
                 // ncurses를 활용해 글을 쓰려면 다음 순서를 거쳐야함
                 // 1. 커서 이동(move) 2. write(addch)
-                move(y, x); 
+                move(y + WINDOW_OFFSET, x + WINDOW_OFFSET);
                 switch (mMapManager.get(x, y))
                 {
                     case EMPTY:
@@ -88,11 +89,15 @@ void GameManager::play() {
                 }
             }
         }
+        // const StatusManager& mStatusManager = mGameRunner.getStatus();
+        // updateScoreStatus(mStatusManager.getScore());
+
+        // updateScoreStatus();
         //refresh를 invoke 해줘야 ncurses가 화면에 그려줌
         refresh();
         if(!mGameRunner.nextFrame(direction)) {
             // 종료됨
-            printw("breaked");
+            printw("Game Over");
             refresh();
             break;
         }
@@ -111,7 +116,12 @@ void GameManager::initializeWindow() {
     keypad(stdscr, true); // 화살표 입력 받기 위해 
     
     getmaxyx(stdscr, maxHeight, maxWidth);
+
+    const MapManager mMapManager = mGameRunner.getMap();
+    gameMapHeight = mMapManager.height;
+    gameMapWidth = mMapManager.width;
 }
+
 bool GameManager::validateWindow() {
     
     const MapManager mMapManager = mGameRunner.getMap();
@@ -119,6 +129,7 @@ bool GameManager::validateWindow() {
     {
         move((maxHeight-2)/2,(maxWidth-5)/2);
         printw("Window size should be bigger than %d X %d", maxHeight, maxWidth);
+        endwin();
         exit(1);
     }
 }
@@ -130,8 +141,10 @@ void GameManager::initializeColors() {
 
     if (has_colors() == FALSE) {
         // 색 지원 안할때 처리
+
+        printw("Your terminal does not support color\n");
+        refresh();
         endwin();
-        printf("Your terminal does not support color\n");
         exit(1);
     }
 
@@ -140,3 +153,61 @@ void GameManager::initializeColors() {
     init_pair(2, COLOR_GREEN, -1); // snake
     init_pair(3, COLOR_WHITE, COLOR_MAGENTA); // gate
 }
+
+void GameManager::initializeScoreBoard() {
+
+    refresh();
+    int offsetx = gameMapWidth + WINDOW_OFFSET + SCORE_BOARD_WIDTH + 5;
+    int offsety = WINDOW_OFFSET;
+
+    windowScoreBoard = newwin(SCORE_BOARD_HEIGHT, SCORE_BOARD_WIDTH, offsety, offsetx);
+
+    // box(windowScoreBoard, 0, 0);
+    wborder(windowScoreBoard, '|', '|', '-', '-', '+', '+', '+', '+');
+    mvwprintw(windowScoreBoard, 0, 5, "Score");
+
+    mvwprintw(windowScoreBoard, 2, 1, "B: 3 / 10");
+    mvwprintw(windowScoreBoard, 3, 1, "+: 0");
+    mvwprintw(windowScoreBoard, 4, 1, "-: 0");
+    mvwprintw(windowScoreBoard, 5, 1, "G: 0");
+
+    wrefresh(windowScoreBoard);
+}
+
+void GameManager::initializeGoalBoard() {
+
+    refresh();
+    int offsetx = gameMapWidth + WINDOW_OFFSET + GOAL_BOARD_WIDTH + 5;
+    int offsety = WINDOW_OFFSET + GOAL_BOARD_HEIGHT + 1;
+
+    windowGoalBoard = newwin(GOAL_BOARD_HEIGHT, GOAL_BOARD_WIDTH, offsety, offsetx);
+
+    wborder(windowGoalBoard, '|', '|', '-', '-', '+', '+', '+', '+');
+    mvwprintw(windowGoalBoard, 0, 5 , "Goal");
+    mvwprintw(windowGoalBoard, 2, 1, "B: %d (%c)",10,' ');
+    mvwprintw(windowGoalBoard, 3, 1, "+: %d (%c)",7,' ');
+    mvwprintw(windowGoalBoard, 4, 1, "-: %d (%c)",5,'O');
+    mvwprintw(windowGoalBoard, 5, 1, "G: %d (%c)",3),' ';
+
+    wrefresh(windowGoalBoard);
+}
+
+void GameManager::updateScoreStatus() {
+    mvwprintw(windowGoalBoard, 2, 1, "B: 3 / 7");
+    mvwprintw(windowGoalBoard, 3, 1, "+: 0");
+    mvwprintw(windowGoalBoard, 4, 1, "-: 0");
+    mvwprintw(windowGoalBoard, 5, 1, "G: 0");
+
+    wrefresh(windowScoreBoard);
+}
+
+void GameManager::updateMissionStatus(const Mission& mission) {
+    // mvwprintw(windowGoalBoard, indexOfSnakeScoreCurrentLength[1], indexOfSnakeScoreCurrentLength[0], "%d", mission.goalBody);
+    // mvwprintw(windowGoalBoard, indexOfPlusScore[1], indexOfPlusScore[0], "%d", score.scoreGrowth);
+    // mvwprintw(windowGoalBoard, indexOfMinusScore[1], indexOfMinusScore[0], "%d", score.scorePoison);
+    // mvwprintw(windowGoalBoard, indexOfGateScore[1], indexOfGateScore[0], "%d", score.scoreGate);
+
+    // wrefresh(windowGoalBoard);
+
+}
+
