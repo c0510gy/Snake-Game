@@ -124,7 +124,7 @@ bool Snake::isInPortal(){
     return portalRemaining;
 }
 
-GameRunner::GameRunner(const MapItem& gameMapInfo, int length, int direction):
+GameRunner::GameRunner(const MapItem& gameMapInfo, int length):
     status(StatusManager(gameMapInfo.MAX_SCORE_BODY, gameMapInfo.goalBody, gameMapInfo.goalGrowth, gameMapInfo.goalPoison, gameMapInfo.goalGate)){
     this->gameMap = gameMapInfo.gameMap;
     for(int y = 0; y < this->gameMap.height; ++y){
@@ -140,7 +140,7 @@ GameRunner::GameRunner(const MapItem& gameMapInfo, int length, int direction):
         }
     }
     for(int i = 0; i < length; ++i) status.scoreBody();
-    snake = Snake(this->gameMap, gameMapInfo.startPoint, length, direction, gameMapInfo.MAX_SCORE_BODY);
+    snake = Snake(this->gameMap, gameMapInfo.startPoint, length, gameMapInfo.startDirection, gameMapInfo.MAX_SCORE_BODY);
 }
 Point GameRunner::getRandomItemPoint(std::queue<std::pair<IndexedPoint, int>>& timeQ){
     IndexedPoint ip = {-1, {-1, -1}};
