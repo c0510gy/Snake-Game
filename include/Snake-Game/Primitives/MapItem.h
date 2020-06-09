@@ -21,6 +21,7 @@ struct MapItem{
     int goalPoison;
     int goalGate;
     int MAX_SCORE_BODY;
+    int startDirection;
 
     MapManager gameMap;
     Point startPoint;

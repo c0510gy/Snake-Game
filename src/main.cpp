@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     UserItem users = test.readUser("hi");
 
     GameRunner myGame(items);
-    GameManager gameManager = GameManager(myGame);
+    GameManager gameManager = GameManager(myGame, items);
 
     gameManager.play();
 

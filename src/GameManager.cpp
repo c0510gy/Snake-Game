@@ -1,10 +1,12 @@
 #include "Snake-Game/GameManager.h"
 
-GameManager::GameManager(GameRunner gameRunner): mGameRunner(gameRunner) {
+GameManager::GameManager(GameRunner gameRunner, MapItem mapItem): mGameRunner(gameRunner) {
     initializeWindow();
     initializeColors();
     initializeScoreBoard();
     initializeGoalBoard();
+
+    initDirection = mapItem.startDirection;
 }
 
 GameManager::~GameManager() {
@@ -17,7 +19,7 @@ GameManager::~GameManager() {
 
 void GameManager::play() {
 
-    int direction = 1;
+    int direction = initDirection;
     while (1)
     {
         const MapManager mMapManager = mGameRunner.getMap();
@@ -109,6 +111,7 @@ void GameManager::play() {
 
 void GameManager::initializeWindow() {
     initscr(); // ncurses 시작
+    cbreak();
     noecho(); // 커서 blink 없이
     curs_set(0);
     nodelay(stdscr,TRUE); // 입력 대기 없이(continuous 하게 게임 진행)
