@@ -14,6 +14,7 @@
 #include "Score.h"
 #include "Point.h"
 #include "Snake-Game.h"
+#include "MapItem.h"
 
 #define WINDOW_OFFSET 3
 
@@ -26,12 +27,14 @@
 
 class GameManager {
 public:
-    GameManager(GameRunner gameRunner);
+    GameManager(GameRunner gameRunner, MapItem mapItem);
     ~GameManager();
     void play();
 private:
     int maxHeight, maxWidth;
     int gameMapHeight, gameMapWidth;
+
+    int initDirection; // 처음 어느 방향부터 시작해야하나
 
     GameRunner mGameRunner;
 
