@@ -28,7 +28,7 @@ void FileManager::writeMap(const MapItem &map, std::string filePath)
     outFile << "goalPoison=" << map.goalPoison << "\n";  
     outFile << "goalGate=" << map.goalGate << "\n";
     outFile << "MAX_SCORE_BODY=" << map.MAX_SCORE_BODY << "\n";
-    outFile << "mapData=" << map.MAX_SCORE_BODY << "\n";
+    outFile << "mapData=" << "\n";
 
     for(int y = 0; y < map.gameMap.height; ++y){
         std::string tmp = "";
