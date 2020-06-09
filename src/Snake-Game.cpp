@@ -122,8 +122,9 @@ bool Snake::isInPortal(){
     return portalRemaining;
 }
 
-GameRunner::GameRunner(const MapManager& gameMap, Point startPoint, int length, int direction){
-    this->gameMap = gameMap;
+GameRunner::GameRunner(const MapItem& gameMapInfo, int length, int direction):
+    status(StatusManager(gameMapInfo.MAX_SCORE_BODY, gameMapInfo.goalBody, gameMapInfo.goalGrowth, gameMapInfo.goalPoison, gameMapInfo.goalGate)){
+    this->gameMap = gameMapInfo.gameMap;
     for(int y = 0; y < this->gameMap.height; ++y){
         for(int x = 0; x < this->gameMap.width; ++x){
             switch(this->gameMap.get(x, y)){
@@ -136,9 +137,7 @@ GameRunner::GameRunner(const MapManager& gameMap, Point startPoint, int length, 
             }
         }
     }
-    snake = Snake(this->gameMap, startPoint, length, direction);
-
-    // Todo (윤상건): gameMap에 들어있는 정보를 바탕으로 status 초기화
+    snake = Snake(this->gameMap, gameMapInfo.startPoint, length, direction);
 }
 Point GameRunner::getRandomItemPoint(std::queue<std::pair<IndexedPoint, int>>& timeQ){
     IndexedPoint ip = {-1, {-1, -1}};

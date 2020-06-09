@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     MapItem items = test.readMap("./testMap2.txt");
     UserItem users = test.readUser("hi");
 
-    GameRunner myGame(items.gameMap, items.startPoint);
+    GameRunner myGame(items);
     GameManager gameManager = GameManager(myGame);
 
     gameManager.play();

@@ -100,11 +100,11 @@ private:
     void updatePortal();                    // Portal 업데이트
 public:
     // gameMap의 맵을 가지고 Snake의 초기 위치가 startPoint이며 길이가 length이고 방향이 direction인 게임을 생성
-    GameRunner(const MapManager& gameMap, Point startPoint, int length=3, int direction=0);
+    GameRunner(const MapItem& gameMapInfo, int length=3, int direction=0);
 
     bool nextFrame(int direction);          // Snake가 direction방향으로 이동하는 다음 프레임을 계산하고 game over여부를 반환
     const MapManager& getMap();             // 현재 진행중인 게임의 맵을 반환
-    
+    const StatusManager& getStatus();       // 현재 진행중인 게임의 상태 (점수, 미션) 반환
 };
 
 #endif
