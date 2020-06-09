@@ -10,8 +10,25 @@
 // {
 // }
 
-// void FileManager::writeMap(const MapItem &map, string filePath)
+// void FileManager::writeMap(const MapItem &map, std::string filePath)
 // {
+//     outFile = std::ofstream(filePath);
+//         for(int y = 0; y < map.gameMap.height; ++y){
+//         std::string tmp = "";
+//         for(int x = 0; x < map.gameMap.width; ++x){
+//             switch(map.gameMap.get(x, y)){
+//                 case EMPTY:
+//                     tmp += "0";
+//                     break;
+//                 case WALL:
+//                     tmp += "1";
+//                     break;
+//                 case IMWALL:
+//                     tmp += "2";
+//                     break;
+//             }
+//         }
+//     }
 // }
 
 bool FileManager::isFileExist(std::string filePath){
@@ -52,6 +69,8 @@ MapItem FileManager::readMap(std::string filePath)
                 items.startPoint.x = stoi(value);
             else if (key == "startPointY")
                 items.startPoint.y = stoi(value);
+            else if (key == "startDirection")
+                items.startDirection = stoi(value);
             else if (key == "goalBody")
                 items.goalBody = stoi(value);
             else if (key == "goalGrowth")

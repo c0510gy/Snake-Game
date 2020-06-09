@@ -6,6 +6,7 @@ W=78
 H=21
 startPointX=3
 startPointY=3
+startDirection=2
 goalBody=10
 goalGrowth=5
 goalPoison=2
