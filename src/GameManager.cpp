@@ -109,6 +109,7 @@ void GameManager::play() {
 
 void GameManager::initializeWindow() {
     initscr(); // ncurses 시작
+    cbreak();
     noecho(); // 커서 blink 없이
     curs_set(0);
     nodelay(stdscr,TRUE); // 입력 대기 없이(continuous 하게 게임 진행)
