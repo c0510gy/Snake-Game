@@ -10,9 +10,30 @@
 // {
 // }
 
-// void FileManager::writeMap(const MapItem &map, string filePath)
-// {
-// }
+void FileManager::writeMap(const MapItem &map, std::string filePath)
+{
+    if(isFileExist(filePath)){
+        
+        for(int y = 0; y < map.gameMap.height; ++y){
+        std::string tmp = "";
+        for(int x = 0; x < map.gameMap.width; ++x){
+            switch(map.gameMap.get(x, y)){
+                case EMPTY:
+                    tmp += "0";
+                    break;
+                case WALL:
+                    tmp += "1";
+                    break;
+                case IMWALL:
+                    tmp += "2";
+                    break;
+            }
+        }
+    }
+    
+    }
+
+}
 
 bool FileManager::isFileExist(std::string filePath){
     std::ifstream inFile(filePath);
