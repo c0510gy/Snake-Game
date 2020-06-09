@@ -10,6 +10,7 @@
 #include "Primitives/Point.h"
 #include "Primitives/MapManager.h"
 #include "Primitives/MapItem.h"
+#include "Primitives/UserItem.h"
 #include "FileManager.h"
 #include <algorithm>
 #include <vector>

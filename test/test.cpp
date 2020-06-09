@@ -2,13 +2,16 @@
 #include <fstream>
 #include <string>
 #include "Snake-Game/Snake-Game.h"
+#include "Snake-Game/FileManager.h"
 
 using namespace std;
 
 int main(){
     FileManager test;
-    struct MapItem items = test.readMap("./testMap2.txt");
+    MapItem items = test.readMap("./testMap2.txt");
+    UserItem users = test.readUser("hi"); 
     cout << "맵 이름: " << items.name << endl << "맵 설명: " << items.detail << endl;
+    cout << users.name << " " << users.id << " " << users.highScore << endl;
     GameRunner myGame(items.gameMap, items.startPoint);
     int direction = 0;
     cout << "started!!" << endl;

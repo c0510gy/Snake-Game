@@ -8,7 +8,7 @@
 
 #include "Primitives/MapItem.h"
 #include "Primitives/MapManager.h"
-#include "Primitives/UserManager.h"
+#include "Primitives/UserItem.h"
 #include <fstream>
 #include <string>
 
@@ -16,6 +16,8 @@ class FileManager{
 private:
     std::ofstream outFile;
     std::ifstream inFile;
+
+    bool isFileExist(std::string filePath);
 public:
     // FileManager();
     // FileManager(string filePath);
@@ -23,8 +25,8 @@ public:
     void writeMap(const MapItem& map, std::string filePath);
     MapItem readMap(std::string filePath);
 
-    void writeUser(const UserManager& user, std::string filePath);
-    UserManager readUser(std::string filePath);
+    void writeUser(const UserItem &user);
+    UserItem readUser(std::string filePath);
 };
 
 #endif

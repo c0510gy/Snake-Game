@@ -14,12 +14,17 @@
 // {
 // }
 
+bool FileManager::isFileExist(std::string filePath){
+    std::ifstream inFile(filePath);
+    return inFile.is_open();
+}
+
 MapItem FileManager::readMap(std::string filePath)
 {
     int width, height;
     struct MapItem items;
 
-    std::ifstream inFile(filePath);
+    inFile = std::ifstream(filePath);
     if (inFile.is_open())
     {
         std::string lineScan;
@@ -83,18 +88,36 @@ MapItem FileManager::readMap(std::string filePath)
     return items;
 }
 
-void FileManager::writeUser(const UserManager &user, std::string filePath)
-{
-    std::ifstream inFile(filePath);
-    if (inFile.is_open())
-    {
+void FileManager::writeUser(const UserItem &user){
+    std::string userFilePath = "userData/" + user.name + ".txt";
+    if(isFileExist(userFilePath)){
+        outFile = std::ofstream(userFilePath);
+        outFile << "userID=" << user.id << "\n";
+        outFile << "userName=" << user.name << "\n";
+        outFile << "userHighScore=" << user.highScore;
     }
-    else{
-        std::ofstream out(filePath);
-
-    }
-    
 }
-// UserManager FileManager::readUser(string filePath)
-// {
-// }
+
+UserItem FileManager::readUser(std::string userId)
+{
+    std::string userFilePath = "./userData/" + userId + ".txt";
+    UserItem user;
+    if(isFileExist(userFilePath)){
+        std::string lineScan;
+        inFile = std::ifstream(userFilePath);
+        while (std::getline(inFile, lineScan))
+        {
+            int separatorIdx = lineScan.find("=");
+            std::string key = lineScan.substr(0, separatorIdx);
+            std::string value = lineScan.substr(separatorIdx + 1);
+
+            if (key == "userID")
+                user.id = std::stoi(value);
+            else if (key == "userName")
+                user.name = value;
+            else if (key == "userHighScore")
+                user.highScore = std::stoi(value);
+        }
+    }
+    return user;
+}
