@@ -39,13 +39,13 @@ private:
     WINDOW *windowGoalBoard;
 
     void initializeWindow();
-    bool validateWindow();
+    void validateWindow();
     void initializeColors();
 
     void initializeScoreBoard();
     void initializeGoalBoard();
 
-    void updateScoreStatus();
+    void updateScoreStatus(const Score& score);
     void updateMissionStatus(const Mission& mission);
 };
 
