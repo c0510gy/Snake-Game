@@ -31,16 +31,20 @@ void GameManager::play() {
                 direction = 0;
                 break;
 
-            case KEY_DOWN:
-                direction = 3;
+            case KEY_UP:
+                direction = 1;
                 break;
-
+            
             case KEY_RIGHT:
                 direction = 2;
                 break;
 
-            case KEY_UP:
-                direction = 1;
+            case KEY_DOWN:
+                direction = 3;
+                break;    
+
+            case 'q':
+                direction = 4;
                 break;
 
             default:
@@ -96,7 +100,7 @@ void GameManager::play() {
         updateMissionStatus(mStatusManager.getMission());
         //refresh를 invoke 해줘야 ncurses가 화면에 그려줌
         refresh();
-        if(!mGameRunner.nextFrame(direction)) {
+        if(direction == 4 || !mGameRunner.nextFrame(direction)) {
             // 종료됨
             printw("Game Over");
             refresh();
@@ -105,7 +109,7 @@ void GameManager::play() {
         // 딜레이 안주면 게임이 너무 빨리 진행됨.
         // 프레임 밀리는 현상이 이 함수 관련한거 같음
         // 아마 다른 방식으로 스레드에 락 주는 방식을 사용해야 할 것 같음
-        usleep(500000);
+        usleep(400000);
     }
 }
 
