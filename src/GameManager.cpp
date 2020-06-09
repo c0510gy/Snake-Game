@@ -89,10 +89,9 @@ void GameManager::play() {
                 }
             }
         }
-        // const StatusManager& mStatusManager = mGameRunner.getStatus();
-        // updateScoreStatus(mStatusManager.getScore());
-
-        // updateScoreStatus();
+        const StatusManager& mStatusManager = mGameRunner.getStatus();
+        updateScoreStatus(mStatusManager.getScore());
+        updateMissionStatus(mStatusManager.getMission());
         //refresh를 invoke 해줘야 ncurses가 화면에 그려줌
         refresh();
         if(!mGameRunner.nextFrame(direction)) {
@@ -122,7 +121,7 @@ void GameManager::initializeWindow() {
     gameMapWidth = mMapManager.width;
 }
 
-bool GameManager::validateWindow() {
+void GameManager::validateWindow() {
     
     const MapManager mMapManager = mGameRunner.getMap();
     if (mMapManager.height > maxHeight || mMapManager.width > maxWidth)
@@ -174,6 +173,16 @@ void GameManager::initializeScoreBoard() {
     wrefresh(windowScoreBoard);
 }
 
+
+void GameManager::updateScoreStatus(const Score& score) {
+    mvwprintw(windowScoreBoard, 2, 1, "B: %d / %d", score.scoreBody, score.MAX_SCORE_BODY);
+    mvwprintw(windowScoreBoard, 3, 1, "+: %d", score.scoreGrowth);
+    mvwprintw(windowScoreBoard, 4, 1, "-: %d", score.scorePoison);
+    mvwprintw(windowScoreBoard, 5, 1, "G: 0", score.scoreGate);
+
+    wrefresh(windowScoreBoard);
+}
+
 void GameManager::initializeGoalBoard() {
 
     refresh();
@@ -187,27 +196,18 @@ void GameManager::initializeGoalBoard() {
     mvwprintw(windowGoalBoard, 2, 1, "B: %d (%c)",10,' ');
     mvwprintw(windowGoalBoard, 3, 1, "+: %d (%c)",7,' ');
     mvwprintw(windowGoalBoard, 4, 1, "-: %d (%c)",5,'O');
-    mvwprintw(windowGoalBoard, 5, 1, "G: %d (%c)",3),' ';
+    mvwprintw(windowGoalBoard, 5, 1, "G: %d (%c)",3 ,' ');
 
     wrefresh(windowGoalBoard);
 }
 
-void GameManager::updateScoreStatus() {
-    mvwprintw(windowGoalBoard, 2, 1, "B: 3 / 7");
-    mvwprintw(windowGoalBoard, 3, 1, "+: 0");
-    mvwprintw(windowGoalBoard, 4, 1, "-: 0");
-    mvwprintw(windowGoalBoard, 5, 1, "G: 0");
-
-    wrefresh(windowScoreBoard);
-}
-
 void GameManager::updateMissionStatus(const Mission& mission) {
-    // mvwprintw(windowGoalBoard, indexOfSnakeScoreCurrentLength[1], indexOfSnakeScoreCurrentLength[0], "%d", mission.goalBody);
-    // mvwprintw(windowGoalBoard, indexOfPlusScore[1], indexOfPlusScore[0], "%d", score.scoreGrowth);
-    // mvwprintw(windowGoalBoard, indexOfMinusScore[1], indexOfMinusScore[0], "%d", score.scorePoison);
-    // mvwprintw(windowGoalBoard, indexOfGateScore[1], indexOfGateScore[0], "%d", score.scoreGate);
+    mvwprintw(windowGoalBoard, 2, 1, "B: %d (%c)", mission.goalBody, (mission.achBody ? 'O' : ' '));
+    mvwprintw(windowGoalBoard, 3, 1, "+: %d (%c)", mission.goalGrowth, (mission.achGrowth ? 'O' : ' '));
+    mvwprintw(windowGoalBoard, 4, 1, "-: %d (%c)", mission.goalPoison, (mission.achPoison ? 'O' : ' '));
+    mvwprintw(windowGoalBoard, 5, 1, "G: %d (%c)", mission.goalGate, (mission.achGate ? 'O' : ' '));
 
-    // wrefresh(windowGoalBoard);
+    wrefresh(windowGoalBoard);
 
 }
 
