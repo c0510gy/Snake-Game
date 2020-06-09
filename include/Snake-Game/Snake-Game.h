@@ -75,7 +75,7 @@ private:
 
     int frames = 0;                         // 현재 진행중인 게임의 frame 수
 
-    const int ITEM_MAX_TIME = 10;           // 아이템이 사라지지 않는 시간
+    const int ITEM_MAX_TIME = 100;           // 아이템이 사라지지 않는 시간
     const int MAX_NUMBER_OF_GROWTH = 3;     // Growth 아이템의 출현 최대 개수
     const int MAX_NUMBER_OF_POISON = 3;     // Poison 아이템의 출현 최대 개수
 
