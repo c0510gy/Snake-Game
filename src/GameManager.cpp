@@ -3,16 +3,17 @@
 GameManager::GameManager(GameRunner gameRunner): mGameRunner(gameRunner) {
     initializeWindow();
     initializeColors();
+    initializeScoreBoard();
 }
 
 GameManager::~GameManager() {
     nodelay(stdscr, false);
     getch();
+    delwin(windowScoreBoard);
     endwin();
 }
 
 void GameManager::play() {
-    
 
     int direction = 0;
     while (1)
@@ -42,8 +43,6 @@ void GameManager::play() {
                 break;
         }
         
-        
-
         // 3. 그려주고
         for (int y = 0; y < mMapManager.height; ++y)
         {
@@ -52,7 +51,7 @@ void GameManager::play() {
                 // 커서 위치를 x,y로 이동 시킴.
                 // ncurses를 활용해 글을 쓰려면 다음 순서를 거쳐야함
                 // 1. 커서 이동(move) 2. write(addch)
-                move(x, y); 
+                move(x + WINDOW_OFFSET, y + WINDOW_OFFSET); 
                 switch (mMapManager.get(x, y))
                 {
                     case EMPTY:
@@ -92,7 +91,7 @@ void GameManager::play() {
         refresh();
         if(!mGameRunner.nextFrame(direction)) {
             // 종료됨
-            printw("breaked");
+            printw("Game Over");
             refresh();
             break;
         }
@@ -104,6 +103,7 @@ void GameManager::play() {
 }
 
 void GameManager::initializeWindow() {
+    setlocale(LC_ALL, "");
     initscr(); // ncurses 시작
     noecho(); // 커서 blink 없이
     curs_set(0);
@@ -111,7 +111,12 @@ void GameManager::initializeWindow() {
     keypad(stdscr, true); // 화살표 입력 받기 위해 
     
     getmaxyx(stdscr, maxHeight, maxWidth);
+
+    const MapManager mMapManager = mGameRunner.getMap();
+    gameMapHeight = mMapManager.height;
+    gameMapWidth = mMapManager.width;
 }
+
 bool GameManager::validateWindow() {
     
     const MapManager mMapManager = mGameRunner.getMap();
@@ -119,6 +124,7 @@ bool GameManager::validateWindow() {
     {
         move((maxHeight-2)/2,(maxWidth-5)/2);
         printw("Window size should be bigger than %d X %d", maxHeight, maxWidth);
+        endwin();
         exit(1);
     }
 }
@@ -130,8 +136,10 @@ void GameManager::initializeColors() {
 
     if (has_colors() == FALSE) {
         // 색 지원 안할때 처리
+
+        printw("Your terminal does not support color\n");
+        refresh();
         endwin();
-        printf("Your terminal does not support color\n");
         exit(1);
     }
 
@@ -139,4 +147,18 @@ void GameManager::initializeColors() {
     init_pair(1, COLOR_WHITE, COLOR_WHITE); // wall
     init_pair(2, COLOR_GREEN, -1); // snake
     init_pair(3, COLOR_WHITE, COLOR_MAGENTA); // gate
+}
+
+void GameManager::initializeScoreBoard() {
+
+    refresh();
+    int offsetx = gameMapWidth + SCORE_BOARD_WIDTH + 5;
+    int offsety = 3;
+
+    windowScoreBoard = newwin(SCORE_BOARD_HEIGHT, SCORE_BOARD_WIDTH, offsety, offsetx);
+
+    // box(windowScoreBoard, 0, 0);
+    wborder(windowScoreBoard, '|', '|', '-', '-', '+', '+', '+', '+');
+    mvwprintw(windowScoreBoard, 0, 2, "Scoreboard");
+    wrefresh(windowScoreBoard);
 }
