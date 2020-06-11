@@ -42,7 +42,9 @@ void GameManager::play() {
                 break;
 
             case 'q':
+            case 'Q':
             case 'p':
+            case 'P':
                 showPauseWindow();
                 break;
 
@@ -184,7 +186,7 @@ void GameManager::initializeScoreBoard() {
 
 
 void GameManager::updateScoreStatus(const Score& score) {
-    mvwprintw(windowScoreBoard, 2, 1, "B: %d / %d", score.scoreBody, score.MAX_SCORE_BODY);
+    mvwprintw(windowScoreBoard, 2, 1, "B: %d / %d", score.scoreBody, score.maxBodyScore);
     mvwprintw(windowScoreBoard, 3, 1, "+: %d", score.scoreGrowth);
     mvwprintw(windowScoreBoard, 4, 1, "-: %d", score.scorePoison);
     mvwprintw(windowScoreBoard, 5, 1, "G: 0", score.scoreGate);

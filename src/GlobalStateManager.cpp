@@ -30,12 +30,12 @@ void GlobalStateManager::startGame() {
     
     // 1-st map
     startGame("./tutorial1.txt", "hi");
-    // // 2-nd map
-    // startGame("./tutorial2.txt", "hi");
-    // // 3-rd map
-    // startGame("./tutorial3.txt", "hi");
-    // // 4-th map
-    // startGame("./tutorial4.txt", "hi");
+    // 2-nd map
+    startGame("./tutorial2.txt", "hi");
+    // 3-rd map
+    startGame("./tutorial3.txt", "hi");
+    // 4-th map
+    startGame("./tutorial4.txt", "hi");
 
 }
 
