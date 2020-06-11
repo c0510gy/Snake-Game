@@ -15,6 +15,8 @@ int main(){
     cout << "B:" << items.goalBody << " +:" << items.goalGrowth << " -:" 
          << items.goalPoison << " G:" << items.goalGate << " MAXLEN:" << items.MAX_SCORE_BODY << endl;
     test.writeMap(items, "./mapData/write.txt");
+    test.scanDir("mapData");
+    
     GameRunner myGame(items.gameMap, items.startPoint);
     int direction = 0;
     cout << "started!!" << endl;
