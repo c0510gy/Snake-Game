@@ -3,6 +3,13 @@ Team project: Snake Game - 2020-1 C++ Programming
 
 ## 보고서
 
+### Table of Contents
+1. [1 단계](#1-단계)
+2. [2 단계](#2-단계)
+3. [3 단계](#3-단계)
+4. [4 단계](#4-단계)
+5. [5 단계](#5-단계)
+
 ### 1 단계
 
 * NCurses Library 함수들을 사용하여 2 차원 배열로 된 Snake Map을 Game 화면으로 표시하는 프로그램을 완성한다. 그림의 세부사항은 각자 정한다.
@@ -10,6 +17,27 @@ Team project: Snake Game - 2020-1 C++ Programming
 * 주의 : Wall 과 Immune Wall 을 잘 구분할 것
 
 #### 1단계 구현 내용
+
+* Project File Structure
+```
+include
+├── Primitives
+│   ├── Item.h
+│   ├── MapItem.h
+│   ├── MapManager.h
+│   └── Point.h
+├── FileManager.h ???
+├── GameManager.h ???
+├── GlobalStateManager.h ???
+└── MenuManager.h ???
+
+src
+├── FileManager.cpp ???
+├── GameManager.cpp ???
+├── GlobalStateManager.cpp ???
+├── main.cpp ???
+└── MenuManager.cpp ???
+```
 
 ```cpp
 /* 
@@ -178,6 +206,30 @@ struct MapItem{
 * Snake는 규칙 #1을 준수해야 한다.
 
 #### 2단계 구현 내용
+
+* Project File Structure
+```
+include
+└── Snake-Game
+    ├── Primitives
+    │   ├── Item.h
+    │   ├── MapItem.h
+    │   ├── MapManager.h
+    │   └── Point.h
+    ├── FileManager.h ???
+    ├── GameManager.h ???
+    ├── GlobalStateManager.h ???
+    ├── MenuManager.h ???
+    └── Snake-Game.h
+
+src
+├── FileManager.cpp ???
+├── GameManager.cpp ???
+├── GlobalStateManager.cpp ???
+├── main.cpp ???
+├── MenuManager.cpp ???
+└── Snake-Game.cpp
+```
 
 ```cpp
 /* 
@@ -362,6 +414,30 @@ int GameRunner::getDirection(){
     * Map Data에서 Growth Item은 5, Poison Item은 6 과 같이 구분할 수 있도록 한다
 
 #### 3단계 구현 내용
+
+* Project File Structure
+```
+include
+└── Snake-Game
+    ├── Primitives
+    │   ├── Item.h
+    │   ├── MapItem.h
+    │   ├── MapManager.h
+    │   └── Point.h
+    ├── FileManager.h ???
+    ├── GameManager.h ???
+    ├── GlobalStateManager.h ???
+    ├── MenuManager.h ???
+    └── Snake-Game.h
+
+src
+├── FileManager.cpp ???
+├── GameManager.cpp ???
+├── GlobalStateManager.cpp ???
+├── main.cpp ???
+├── MenuManager.cpp ???
+└── Snake-Game.cpp
+```
 
 ```cpp
 /* 
@@ -682,6 +758,30 @@ int GameRunner::getDirection(){
     * Map Data에서 Gate는 7과 같이 하여, 다른 요소와 구분할 수 있도록 한다
 
 #### 4단계 구현 내용
+
+* Project File Structure
+```
+include
+└── Snake-Game
+    ├── Primitives
+    │   ├── Item.h
+    │   ├── MapItem.h
+    │   ├── MapManager.h
+    │   └── Point.h
+    ├── FileManager.h ???
+    ├── GameManager.h ???
+    ├── GlobalStateManager.h ???
+    ├── MenuManager.h ???
+    └── Snake-Game.h
+
+src
+├── FileManager.cpp ???
+├── GameManager.cpp ???
+├── GlobalStateManager.cpp ???
+├── main.cpp ???
+├── MenuManager.cpp ???
+└── Snake-Game.cpp
+```
 
 ```cpp
 /* 
@@ -1059,6 +1159,34 @@ int GameRunner::getDirection(){
     * Stage는 최소 4개로 구성하고, 각 Stage의 Map은 서로 달라야 한다
 
 #### 5단계 구현 내용
+
+* Project File Structure
+```
+include
+└── Snake-Game
+    ├── Primitives
+    │   ├── Item.h
+    │   ├── MapItem.h
+    │   ├── MapManager.h
+    │   ├── Mission.h
+    │   ├── Point.h
+    │   └── Score.h
+    ├── FileManager.h ???
+    ├── GameManager.h ???
+    ├── GlobalStateManager.h ???
+    ├── MenuManager.h ???
+    ├── Snake-Game.h
+    └── StatusManager.h
+
+src
+├── FileManager.cpp ???
+├── GameManager.cpp ???
+├── GlobalStateManager.cpp ???
+├── main.cpp ???
+├── MenuManager.cpp ???
+├── Snake-Game.cpp
+└── StatusManager.cpp
+```
 
 ```cpp
 /* 
