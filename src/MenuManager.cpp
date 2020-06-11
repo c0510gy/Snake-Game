@@ -15,18 +15,37 @@ void MenuManager::initializeMenu() {
 
 void MenuManager::showMenu() {
 
-    if (MENU_WINDOW_HEIGHT > maxHeight || MENU_WINDOW_WIDTH > maxWidth) {
+    if (30 > maxHeight || 150 > maxWidth) {
 
-        move((maxHeight-2)/2,(maxWidth-5)/2);
-        printw("Window size should be bigger than %d X %d", MENU_WINDOW_HEIGHT, MENU_WINDOW_WIDTH);
+        move(15,75);
+        printw("Window size should be bigger than %d X %d", 150, 30);
         endwin();
         exit(1);
     }
 
     refresh();
+    
 
-    int offsety = (maxHeight - MENU_WINDOW_HEIGHT) / 2;
-    int offsetx = (maxWidth - MENU_WINDOW_WIDTH) / 2;
+    std::ifstream inFile = std::ifstream("./logo.txt");
+    if (inFile.is_open())
+    {
+        std::string lineScan;
+        int i = 2;
+        while (std::getline(inFile, lineScan))
+        {
+            mvprintw(i++, 15, "%s", lineScan.c_str());
+        }
+    }
+
+    mvprintw(13, 15, "Kookmin university C++ EndTerm Project");
+    mvprintw(16, 15, "- Koo Hyong Mo");
+    mvprintw(17, 15, "- Sang Gun Yun");
+    mvprintw(18, 15, "- Kim Tae Yun");
+
+
+
+    int offsety = (maxHeight - MENU_WINDOW_HEIGHT) / 2 - 3;
+    int offsetx = (maxWidth - MENU_WINDOW_WIDTH) / 2 + 10;
     menuWindow = newwin(MENU_WINDOW_HEIGHT, MENU_WINDOW_WIDTH, offsety, offsetx);
 
     wborder(menuWindow, '|', '|', '-', '-', '+', '+', '+', '+');
@@ -76,6 +95,8 @@ void MenuManager::printMenu(int needTobeHighligted) {
 }
 
 void MenuManager::startMode(int mode) {
+    clear();
+    refresh();
     switch (mode)
     {
         case MODE_START_GAME:

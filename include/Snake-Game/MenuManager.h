@@ -13,7 +13,7 @@
 #include "Snake-Game/GlobalStateManager.h"
 
 #define MENU_WINDOW_WIDTH 15
-#define MENU_WINDOW_HEIGHT 20
+#define MENU_WINDOW_HEIGHT 10
 
 #define MODE_START_GAME 0
 #define MODE_SETTING 1
