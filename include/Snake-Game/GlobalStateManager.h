@@ -9,6 +9,7 @@
 #include "Snake-Game.h"
 #include "MenuManager.h"
 #include "GameManager.h"
+#include "MapEditor.h"
 
 class GlobalStateManager {
 private:

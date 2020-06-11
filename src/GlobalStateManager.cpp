@@ -103,3 +103,14 @@ void GlobalStateManager::startCustomGame() {
 
     gameManager.play();
 }
+
+void GlobalStateManager::startMapEditor() {
+    refresh();
+
+    FileManager test;
+    MapItem items = test.readMap("./tutorial1.txt"); // rename
+    UserItem users = test.readUser("hi");
+    MapEditor editor(items);
+
+    editor.edit(items, "s");
+}

@@ -106,6 +106,9 @@ void MenuManager::startMode(int mode) {
         case MODE_SETTING:
             break;
         case MODE_EDIT_MAP:
+            destroyMenu();
+            GlobalStateManager().startMapEditor();
+            endwin();
             break;
         case MODE_EXIT:
             delwin(menuWindow);
