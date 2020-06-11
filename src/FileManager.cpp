@@ -5,13 +5,13 @@
 
 #include "Snake-Game/FileManager.h"
 #include <iostream>
-#include <dirent.h>
 #include <cstring>
-    
+
+// MapItem을 입력 받아 filePath에 기록해주는 함수
 void FileManager::writeMap(const MapItem &map, std::string filePath)
 {
     outFile = std::ofstream(filePath);
-
+    // mapItem에 있는 요소를 하나씩 불러와 key=value쌍으로 저장
     outFile << "name=" << map.name << "\n";
     outFile << "author=" << map.author << "\n";
     outFile << "date=" << map.date << "\n";
@@ -27,7 +27,7 @@ void FileManager::writeMap(const MapItem &map, std::string filePath)
     outFile << "goalGate=" << map.goalGate << "\n";
     outFile << "MAX_SCORE_BODY=" << map.MAX_SCORE_BODY << "\n";
     outFile << "mapData=" << "\n";
-
+    // gameMap을 읽어와 3가지 요소를 구분하여 txt파일에 저장
     for(int y = 0; y < map.gameMap.height; ++y){
         std::string tmp = "";
         for(int x = 0; x < map.gameMap.width; ++x){
@@ -48,11 +48,13 @@ void FileManager::writeMap(const MapItem &map, std::string filePath)
     outFile.close();
 }
 
+// 파일 존재 여부를 확인하는 함수
 bool FileManager::isFileExist(std::string filePath){
     std::ifstream inFile(filePath);
     return inFile.is_open();
 }
 
+// txt파일에서 데이터를 읽어와 MapItem으로 반환하는 함수
 MapItem FileManager::readMap(std::string filePath)
 {
     int width, height;
@@ -65,11 +67,11 @@ MapItem FileManager::readMap(std::string filePath)
         bool mapDataflag = false;
         while (std::getline(inFile, lineScan))
         {
-
+            // key=value쌍으로 이루어진 문자열을 '=' 기준으로 분리
             int separatorIdx = lineScan.find("=");
             std::string key = lineScan.substr(0, separatorIdx);
             std::string value = lineScan.substr(separatorIdx + 1);
-
+            // 각 key값과 value 대응
             if (key == "name")
                 items.name = value;
             else if (key == "author")
@@ -100,11 +102,11 @@ MapItem FileManager::readMap(std::string filePath)
                 items.MAX_SCORE_BODY = stoi(value);
             else if (key == "mapData")
             {
-                mapDataflag = true;
+                mapDataflag = true; // 데이터 성격이 달라 flag처리
                 break;
             }
         }
-        if (mapDataflag)
+        if (mapDataflag) // mapData가 key일 경우 for문으로 한줄씩 데이터 탐색
         {
             MapManager myMap(width, height);
             for (int y = 0; y < height; ++y)
@@ -136,6 +138,7 @@ MapItem FileManager::readMap(std::string filePath)
     return items;
 }
 
+// 유저 정보를 생성해주는 함수
 void FileManager::writeUser(const UserItem &user){
     std::string userFilePath = "userData/" + user.name + ".txt";
     if(isFileExist(userFilePath)){
@@ -147,6 +150,7 @@ void FileManager::writeUser(const UserItem &user){
     outFile.close();
 }
 
+// 유저 정보를 읽어오는 함수
 UserItem FileManager::readUser(std::string userId)
 {
     std::string userFilePath = "./userData/" + userId + ".txt";
@@ -172,17 +176,20 @@ UserItem FileManager::readUser(std::string userId)
     return user;
 }
 
+// 디렉토리 경로를 입력받아 디렉토리 내 파일 목록을 출력해주는 함수
 void FileManager::scanDir(std::string filePath){
+    // OS가 윈도우일 경우,
     #ifdef OS_Windows
     std::string tmpPath = "dir " + filePath + " > " + filePath + "_names.txt";
     char cmd[100];
     strcpy(cmd, tmpPath.c_str());
-    system(cmd);
+    system(cmd); // 시스템 함수를 사용 prompt 호출
+    // 윈도우가 아닌경우
     #else
     std::string tmpPath = "ls " + filePath + " > " + filePath + "_names.txt";
     char cmd[100];
     strcpy(cmd, tmpPath.c_str());
-    system(cmd);
+    system(cmd); // 시스템 함수를 사용 prompt 호출
     #endif
 
     char ch;
