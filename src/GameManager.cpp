@@ -9,10 +9,14 @@ GameManager::GameManager(GameRunner gameRunner): mGameRunner(gameRunner) {
 
 GameManager::~GameManager() {
     nodelay(stdscr, false);
-    getch();
+    wclear(windowScoreBoard);
+    wrefresh(windowScoreBoard);
     delwin(windowScoreBoard);
+    wclear(windowGoalBoard);
+    wrefresh(windowGoalBoard);
     delwin(windowGoalBoard);
 }
+
 
 void GameManager::play() {
     int needToGameOver = 0;
@@ -99,7 +103,7 @@ void GameManager::play() {
             }
         }
         if(needToGameOver) {
-            printw("Game Over %d %d",direction, input);
+            printw("Game Over");
             refresh();
             endwin();
             exit(1);
@@ -107,9 +111,16 @@ void GameManager::play() {
         }
         const StatusManager& mStatusManager = mGameRunner.getStatus();
         updateScoreStatus(mStatusManager.getScore());
-        updateMissionStatus(mStatusManager.getMission());
+        const Mission& mission = mStatusManager.getMission();
+        updateMissionStatus(mission);
+        
         //refresh를 invoke 해줘야 ncurses가 화면에 그려줌
         refresh();
+
+        bool isCompleted = mission.achBody && mission.achGate && mission.achGrowth && mission.achPoison;
+        if(isCompleted) {
+            break;
+        }
         
 
     
@@ -176,7 +187,7 @@ void GameManager::initializeScoreBoard() {
     wborder(windowScoreBoard, '|', '|', '-', '-', '+', '+', '+', '+');
     mvwprintw(windowScoreBoard, 0, 5, "Score");
 
-    mvwprintw(windowScoreBoard, 2, 1, "B: 3 / 10");
+    mvwprintw(windowScoreBoard, 2, 1, "B: 0 / 0");
     mvwprintw(windowScoreBoard, 3, 1, "+: 0");
     mvwprintw(windowScoreBoard, 4, 1, "-: 0");
     mvwprintw(windowScoreBoard, 5, 1, "G: 0");
