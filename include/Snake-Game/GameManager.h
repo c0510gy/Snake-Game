@@ -8,6 +8,7 @@
 
 #include <ncurses.h>
 #include <unistd.h>
+#include <string>
 #include "Snake-Game.h"
 
 #define WINDOW_OFFSET 3
@@ -32,6 +33,7 @@ private:
 
     WINDOW *windowScoreBoard;
     WINDOW *windowGoalBoard;
+    WINDOW *windowPause;
 
     void initializeWindow();
     void validateWindow();
@@ -42,6 +44,8 @@ private:
 
     void updateScoreStatus(const Score& score);
     void updateMissionStatus(const Mission& mission);
+
+    void showPauseWindow();
 };
 
 #endif

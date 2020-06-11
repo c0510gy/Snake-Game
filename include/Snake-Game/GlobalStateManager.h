@@ -17,10 +17,12 @@ public:
 
     void run();
 
+    void startGame(std::string mapDir, std::string userName);
     void startGame();
+    void startCustomGame();
     void startSetting();
-    void startSaveGame();
     void startMapEditor();
+
 };
 
 #endif
