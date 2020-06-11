@@ -112,12 +112,12 @@ void GameManager::play() {
 }
 
 void GameManager::initializeWindow() {
-    initscr(); // ncurses 시작
     cbreak();
     noecho(); 
     curs_set(0); // 커서 blink 없이
     nodelay(stdscr,TRUE); // 입력 대기 없이(continuous 하게 게임 진행)
-    keypad(stdscr, true); // 화살표 입력 받기 위해 
+    keypad(stdscr, true); // 화살표 입력 받기 위해
+    
     
     getmaxyx(stdscr, maxHeight, maxWidth);
 

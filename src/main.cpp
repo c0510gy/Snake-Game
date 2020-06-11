@@ -4,20 +4,27 @@
 #include <ncurses.h>
 #include <unistd.h>
 #include "Snake-Game/Snake-Game.h"
+#include "Snake-Game/MenuManager.h"
 #include "GameManager.h"
 
 using namespace std;
 
 int main(int argc, char *argv[])
 {
-    FileManager test;
-    MapItem items = test.readMap("./testMap2.txt");
-    UserItem users = test.readUser("hi");
+    initscr(); // ncurses 시작
 
-    GameRunner myGame(items);
-    GameManager gameManager = GameManager(myGame);
+    MenuManager menuManager;
+    menuManager.showMenu();
+    getch();
+    menuManager.destroyMenu();
+    // FileManager test;
+    // MapItem items = test.readMap("./testMap2.txt");
+    // UserItem users = test.readUser("hi");
 
-    gameManager.play();
+    // GameRunner myGame(items);
+    // GameManager gameManager = GameManager(myGame);
 
-    return 0;
+    // gameManager.play();
+
+    // return 0;
 }
