@@ -5,6 +5,8 @@
 
 #include "Snake-Game/FileManager.h"
 #include <iostream>
+#include <dirent.h>
+#include <cstring>
 
 // FileManager::FileManager()
 // {
@@ -172,4 +174,25 @@ UserItem FileManager::readUser(std::string userId)
         inFile.close();
     }
     return user;
+}
+
+void FileManager::scanDir(std::string filePath){
+    #ifdef OS_Windows
+    std::string tmpPath = "dir " + filePath + " > " + filePath + "_names.txt";
+    char cmd[100];
+    strcpy(cmd, tmpPath.c_str());
+    system(cmd);
+    #else
+    std::string tmpPath = "ls " + filePath + " > " + filePath + "_names.txt";
+    char cmd[100];
+    strcpy(cmd, tmpPath.c_str());
+    system(cmd);
+    #endif
+
+    char ch;
+    std::fstream myStream(filePath + "_names.txt", std::fstream::in);
+    while (myStream.get(ch))
+    {
+        std::cout << ch;
+    }
 }

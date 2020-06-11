@@ -27,6 +27,8 @@ public:
 
     void writeUser(const UserItem &user);
     UserItem readUser(std::string filePath);
+
+    void scanDir(std::string filePath);
 };
 
 #endif
