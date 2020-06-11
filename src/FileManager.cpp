@@ -95,8 +95,6 @@ MapItem FileManager::readMap(std::string filePath)
                 items.goalPoison = stoi(value);
             else if (key == "goalGate")
                 items.goalGate = stoi(value);
-            else if (key == "maxBodyScore")
-                items.maxBodyScore = stoi(value);
             else if (key == "mapData")
             {
                 mapDataflag = true;
