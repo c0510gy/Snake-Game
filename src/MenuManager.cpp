@@ -10,14 +10,7 @@ MenuManager::MenuManager() {
 }
 
 void MenuManager::initializeMenu() {
-                                                                                                           
-    cbreak();
-    noecho();
-    curs_set(0);
-    keypad(stdscr, TRUE);
-    
     getmaxyx(stdscr, maxHeight, maxWidth);
-    
 }
 
 void MenuManager::showMenu() {
@@ -38,31 +31,30 @@ void MenuManager::showMenu() {
 
     wborder(menuWindow, '|', '|', '-', '-', '+', '+', '+', '+');
 
-    int c, highlight = 0, choice;
+    int c, highlight = 0;
     
     printMenu(highlight);
 
     while(1) {
         c = getch();
         switch(c) {       
-            case KEY_UP:                                                                                    
-                if(highlight == 0)                                                                
-                    highlight = modesName.size() - 1;                                                     
-                else                                                                                    
-                    --highlight;                                                                    
+            case KEY_UP:
+                if(highlight == 0)
+                    highlight = modesName.size() - 1;
+                else
+                    --highlight;
                 break;                                                                                  
             case KEY_DOWN:                                                                                  
                 if(highlight == modesName.size() - 1)                                                              
-                    highlight = 0;                                                                  
+                    highlight = 0;                                                               
                 else                                                                                    
                     ++highlight;                                                                    
                 break;                                                                                  
-            case KEY_ENTER:                                                                                        
-                choice = highlight;                                                           
+            case '\n':                                                                                 
+                startMode(highlight);
+                return;                                                         
                 break;                                                                                  
             default:
-                mvwprintw(menuWindow, 0,0,"%c",c);
-                getch();
                 return;                                                                                
         }
         printMenu(highlight);           
@@ -83,8 +75,28 @@ void MenuManager::printMenu(int needTobeHighligted) {
     wrefresh(menuWindow);
 }
 
+void MenuManager::startMode(int mode) {
+    switch (mode)
+    {
+        case MODE_START_GAME:
+            destroyMenu();
+            GlobalStateManager().startGame();
+            endwin();
+            break;
+        case MODE_SETTING:
+            break;
+        case MODE_LOAD_MAP:
+            break;
+        case MODE_EDIT_MAP:
+            break;
+        
+        default:
+            break;
+    }
+}
+
 void MenuManager::destroyMenu() {
+    wclear(menuWindow);
+    wrefresh(menuWindow);
     delwin(menuWindow);
-    endwin();
-    exit(1);
 }

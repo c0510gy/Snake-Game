@@ -10,19 +10,21 @@
 #include <cstdlib>
 #include <vector>
 #include <string>
+#include "Snake-Game/GlobalStateManager.h"
 
 #define MENU_WINDOW_WIDTH 15
 #define MENU_WINDOW_HEIGHT 20
 
 #define MODE_START_GAME 0
 #define MODE_SETTING 1
-#define LOAD_MAP 2
-#define EDIT_MAP 3
+#define MODE_LOAD_MAP 2
+#define MODE_EDIT_MAP 3
 
 
 class MenuManager {
 public:
     MenuManager();
+    
     void showMenu();
     void destroyMenu();
 private:
@@ -32,6 +34,7 @@ private:
     WINDOW* menuWindow;
     void initializeMenu();
     void printMenu(int needTobeHighligted);
+    void startMode(int mode);
     
 };
 
