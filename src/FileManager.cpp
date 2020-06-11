@@ -7,10 +7,6 @@
 #include <iostream>
 #include <dirent.h>
 #include <cstring>
-
-// FileManager::FileManager()
-// {
-// }
             
 void FileManager::writeMap(const MapItem &map, std::string filePath)
 {
@@ -29,7 +25,7 @@ void FileManager::writeMap(const MapItem &map, std::string filePath)
     outFile << "goalGrowth=" << map.goalGrowth << "\n";
     outFile << "goalPoison=" << map.goalPoison << "\n";  
     outFile << "goalGate=" << map.goalGate << "\n";
-    outFile << "MAX_SCORE_BODY=" << map.MAX_SCORE_BODY << "\n";
+    outFile << "maxBodyScore=" << map.maxBodyScore << "\n";
     outFile << "mapData=" << "\n";
 
     for(int y = 0; y < map.gameMap.height; ++y){
@@ -100,8 +96,8 @@ MapItem FileManager::readMap(std::string filePath)
                 items.goalPoison = stoi(value);
             else if (key == "goalGate")
                 items.goalGate = stoi(value);
-            else if (key == "MAX_SCORE_BODY")
-                items.MAX_SCORE_BODY = stoi(value);
+            else if (key == "maxBodyScore")
+                items.maxBodyScore = stoi(value);
             else if (key == "mapData")
             {
                 mapDataflag = true;

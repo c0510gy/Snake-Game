@@ -15,12 +15,13 @@ GameManager::~GameManager() {
 }
 
 void GameManager::play() {
-
+    int needToGameOver = 0;
     while (1)
     {
         const MapManager mMapManager = mGameRunner.getMap();
-        int direction = mGameRunner.getDirection();
+        
         //1. 입력 받고
+        int direction = mGameRunner.getDirection();
         int input = getch();
         switch (input)
         {
@@ -38,15 +39,18 @@ void GameManager::play() {
 
             case KEY_DOWN:
                 direction = 3;
-                break;    
+                break;
 
             case 'q':
-                direction = 4;
+            case 'p':
+                showPauseWindow();
                 break;
 
-            default:
+            default :
                 break;
         }
+
+        needToGameOver = !mGameRunner.nextFrame(direction);
         
         // 3. 그려주고
         for (int y = 0; y < mMapManager.height; ++y)
@@ -92,19 +96,21 @@ void GameManager::play() {
                 }
             }
         }
-        const StatusManager& mStatusManager = mGameRunner.getStatus();
-        updateScoreStatus(mStatusManager.getScore());
-        updateMissionStatus(mStatusManager.getMission());
-        //refresh를 invoke 해줘야 ncurses가 화면에 그려줌
-        refresh();
-        if(direction == 4 || !mGameRunner.nextFrame(direction)) {
-            // 종료됨
-            printw("Game Over");
+        if(needToGameOver) {
+            printw("Game Over %d %d",direction, input);
             refresh();
             endwin();
             exit(1);
             break;
         }
+        const StatusManager& mStatusManager = mGameRunner.getStatus();
+        updateScoreStatus(mStatusManager.getScore());
+        updateMissionStatus(mStatusManager.getMission());
+        //refresh를 invoke 해줘야 ncurses가 화면에 그려줌
+        refresh();
+        
+
+    
         // 딜레이 안주면 게임이 너무 빨리 진행됨.
         // 프레임 밀리는 현상이 이 함수 관련한거 같음
         // 아마 다른 방식으로 스레드에 락 주는 방식을 사용해야 할 것 같음
@@ -113,7 +119,7 @@ void GameManager::play() {
 }
 
 void GameManager::initializeWindow() {
-    nodelay(stdscr,TRUE); // 입력 대기 없이(continuous 하게 게임 진행)
+    nodelay(stdscr, true); // 입력 대기 없이(continuous 하게 게임 진행)
     
     getmaxyx(stdscr, maxHeight, maxWidth);
 
@@ -212,5 +218,38 @@ void GameManager::updateMissionStatus(const Mission& mission) {
 
     wrefresh(windowGoalBoard);
 
+}
+
+void GameManager::showPauseWindow() {
+
+    nodelay(stdscr, false);
+    refresh();
+    int offsetx = (maxWidth - (maxWidth / 2)) / 2;
+    int offsety = (maxHeight -(maxHeight / 2)) / 2;
+
+    windowPause = newwin(maxHeight / 4, maxWidth / 2, offsety, offsetx);
+
+    std::string message = "Game Paused. Press 'any key' to Continue or 'Q' to quit";
+    mvwprintw(windowPause, 2, 1, "%s", message.c_str());
+
+    wborder(windowPause, '|', '|', '-', '-', '+', '+', '+', '+');
+
+    wrefresh(windowPause);
+    
+    int c = getch();
+    if(c == 'q' || c == 'Q') {
+        refresh();
+        endwin();
+        exit(1);
+    }
+    wclear(windowPause);
+
+    wrefresh(windowPause);
+    initializeGoalBoard();
+    initializeScoreBoard();
+
+    delwin(windowPause);
+    nodelay(stdscr, true);
+    getch();
 }
 
