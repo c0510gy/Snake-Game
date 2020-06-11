@@ -7,11 +7,7 @@
 #include <iostream>
 #include <dirent.h>
 #include <cstring>
-
-// FileManager::FileManager()
-// {
-// }
-            
+    
 void FileManager::writeMap(const MapItem &map, std::string filePath)
 {
     outFile = std::ofstream(filePath);
