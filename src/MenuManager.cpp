@@ -5,8 +5,8 @@ MenuManager::MenuManager() {
     
     modesName.push_back("Start Game");
     modesName.push_back("Settings");
-    modesName.push_back("Load Map");
     modesName.push_back("Edit Map");
+    modesName.push_back("Exit");
 }
 
 void MenuManager::initializeMenu() {
@@ -47,12 +47,12 @@ void MenuManager::showMenu() {
             case KEY_DOWN:                                                                                  
                 if(highlight == modesName.size() - 1)                                                              
                     highlight = 0;                                                               
-                else                                                                                    
+                else                                                                                   
                     ++highlight;                                                                    
                 break;                                                                                  
             case '\n':                                                                                 
-                startMode(highlight);
-                return;                                                         
+                startMode(highlight);   
+                return;                                                  
                 break;                                                                                  
             default:
                 return;                                                                                
@@ -85,9 +85,12 @@ void MenuManager::startMode(int mode) {
             break;
         case MODE_SETTING:
             break;
-        case MODE_LOAD_MAP:
-            break;
         case MODE_EDIT_MAP:
+            break;
+        case MODE_EXIT:
+            delwin(menuWindow);
+            endwin();
+            exit(1);
             break;
         
         default:

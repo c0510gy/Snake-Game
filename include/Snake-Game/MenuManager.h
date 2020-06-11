@@ -17,8 +17,8 @@
 
 #define MODE_START_GAME 0
 #define MODE_SETTING 1
-#define MODE_LOAD_MAP 2
-#define MODE_EDIT_MAP 3
+#define MODE_EDIT_MAP 2
+#define MODE_EXIT 3
 
 
 class MenuManager {

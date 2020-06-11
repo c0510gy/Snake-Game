@@ -119,6 +119,7 @@ void GameManager::play() {
 
         bool isCompleted = mission.achBody && mission.achGate && mission.achGrowth && mission.achPoison;
         if(isCompleted) {
+            clear();
             break;
         }
         
