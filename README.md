@@ -203,7 +203,6 @@ struct MapItem{
     int goalGrowth;
     int goalPoison;
     int goalGate;
-    int MAX_SCORE_BODY;
     int startDirection;
 
     MapManager gameMap;
