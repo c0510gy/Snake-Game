@@ -257,8 +257,6 @@ const Point DIRECTIONS[4] = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
 
 class Snake{
 private:
-    int MAX_LENGTH = 10;                 // 현재 Snake의 최대 길이
-
     int length = 3;                            // 현재 Snake의 길이
     int direction = 0;                         // 현재 Snake의 이동 방향
     std::deque<Point> snakeBody;               // 현재 Snake의 몸통 좌표. Head부터 이웃한 순서대로 front에 위치
@@ -273,7 +271,7 @@ private:
     void generalMove(Point newH);              // 위치 newH로 일반적인 이동
 public:
     Snake(){}
-    Snake(MapManager& gameMap, Point headPoint={0, 0}, int length=3, int direction=0, int MAX_LENGTH=10);
+    Snake(MapManager& gameMap, Point headPoint={0, 0}, int length=3, int direction=0);
 
     // direction방향으로 portals의 포탈을 가진 gameMap맵에서 이동연산 수행
     // 섭취한 아이템을 반환, 유효하지 않은 상황이 발생할 경우 ERROR 반환
@@ -309,7 +307,7 @@ public:
 
 #include "Snake-Game/Snake-Game.h"
 
-Snake::Snake(MapManager& gameMap, Point headPoint, int length, int direction, int MAX_LENGTH): MAX_LENGTH(MAX_LENGTH){
+Snake::Snake(MapManager& gameMap, Point headPoint, int length, int direction){
     this->length = length;
     this->direction = direction;
     for(int j = 0; j < length; ++j){
@@ -386,7 +384,7 @@ int Snake::getDirection(){
 
 GameRunner::GameRunner(const MapItem& gameMapInfo, int length){
     this->gameMap = gameMapInfo.gameMap;
-    snake = Snake(this->gameMap, gameMapInfo.startPoint, length, gameMapInfo.startDirection, gameMapInfo.MAX_SCORE_BODY);
+    snake = Snake(this->gameMap, gameMapInfo.startPoint, length, gameMapInfo.startDirection);
 }
 bool GameRunner::nextFrame(int direction){
     switch(snake.move(direction, gameMap)){
@@ -477,8 +475,6 @@ public:
 
 class Snake{
 private:
-    int MAX_LENGTH = 10;                 // 현재 Snake의 최대 길이
-
     int length = 3;                            // 현재 Snake의 길이
     int direction = 0;                         // 현재 Snake의 이동 방향
     std::deque<Point> snakeBody;               // 현재 Snake의 몸통 좌표. Head부터 이웃한 순서대로 front에 위치
@@ -495,7 +491,7 @@ private:
     void poisonMove(Point newH);               // 위치 newH로 독 이동 - Poison 아이템 효과
 public:
     Snake(){}
-    Snake(MapManager& gameMap, Point headPoint={0, 0}, int length=3, int direction=0, int MAX_LENGTH=10);
+    Snake(MapManager& gameMap, Point headPoint={0, 0}, int length=3, int direction=0);
 
     // direction방향으로 portals의 포탈을 가진 gameMap맵에서 이동연산 수행
     // 섭취한 아이템을 반환, 유효하지 않은 상황이 발생할 경우 ERROR 반환
@@ -553,7 +549,7 @@ public:
 
 #include "Snake-Game/Snake-Game.h"
 
-Snake::Snake(MapManager& gameMap, Point headPoint, int length, int direction, int MAX_LENGTH): MAX_LENGTH(MAX_LENGTH){
+Snake::Snake(MapManager& gameMap, Point headPoint, int length, int direction){
     this->length = length;
     this->direction = direction;
     for(int j = 0; j < length; ++j){
@@ -619,8 +615,6 @@ Item Snake::move(int direction, MapManager& gameMap){
         case GATE:
             break;
     }
-    while(length > MAX_LENGTH)
-        popBack();
     if(!checkValidity(gameMap))
         ret = ERROR;
     return ret;
@@ -660,7 +654,7 @@ GameRunner::GameRunner(const MapItem& gameMapInfo, int length){
             }
         }
     }
-    snake = Snake(this->gameMap, gameMapInfo.startPoint, length, gameMapInfo.startDirection, gameMapInfo.MAX_SCORE_BODY);
+    snake = Snake(this->gameMap, gameMapInfo.startPoint, length, gameMapInfo.startDirection);
 }
 Point GameRunner::getRandomItemPoint(std::queue<std::pair<IndexedPoint, int>>& timeQ){
     IndexedPoint ip = {-1, {-1, -1}};
@@ -821,8 +815,6 @@ public:
 
 class Snake{
 private:
-    int MAX_LENGTH = 10;                 // 현재 Snake의 최대 길이
-
     int length = 3;                            // 현재 Snake의 길이
     int direction = 0;                         // 현재 Snake의 이동 방향
     int portalRemaining = 0;                   // 현재 Snake가 portal에 의해 이동되지 않은 길이
@@ -840,7 +832,7 @@ private:
     void poisonMove(Point newH);               // 위치 newH로 독 이동 - Poison 아이템 효과
 public:
     Snake(){}
-    Snake(MapManager& gameMap, Point headPoint={0, 0}, int length=3, int direction=0, int MAX_LENGTH=10);
+    Snake(MapManager& gameMap, Point headPoint={0, 0}, int length=3, int direction=0);
 
     // direction방향으로 portals의 포탈을 가진 gameMap맵에서 이동연산 수행
     // 섭취한 아이템을 반환, 유효하지 않은 상황이 발생할 경우 ERROR 반환
@@ -904,7 +896,7 @@ public:
 
 #include "Snake-Game/Snake-Game.h"
 
-Snake::Snake(MapManager& gameMap, Point headPoint, int length, int direction, int MAX_LENGTH): MAX_LENGTH(MAX_LENGTH){
+Snake::Snake(MapManager& gameMap, Point headPoint, int length, int direction){
     this->length = length;
     this->direction = direction;
     portalRemaining = 0;
@@ -988,8 +980,6 @@ Item Snake::move(int direction, MapManager& gameMap, std::vector<Point>& portals
         case GATE:
             break;
     }
-    while(length > MAX_LENGTH)
-        popBack();
     if(!checkValidity(gameMap))
         ret = ERROR;
     return ret;
@@ -1035,7 +1025,7 @@ GameRunner::GameRunner(const MapItem& gameMapInfo, int length){
             }
         }
     }
-    snake = Snake(this->gameMap, gameMapInfo.startPoint, length, gameMapInfo.startDirection, gameMapInfo.MAX_SCORE_BODY);
+    snake = Snake(this->gameMap, gameMapInfo.startPoint, length, gameMapInfo.startDirection);
 }
 Point GameRunner::getRandomItemPoint(std::queue<std::pair<IndexedPoint, int>>& timeQ){
     IndexedPoint ip = {-1, {-1, -1}};
@@ -1198,13 +1188,14 @@ src
 #define SNAKE_SCORE
 
 struct Score{
-    const int MAX_SCORE_BODY;
+    int maxBodyScore;
     int scoreBody;
     int scoreGrowth;
     int scorePoison;
     int scoreGate;
 
-    Score(int maxBody=10): MAX_SCORE_BODY(maxBody){
+    Score(){
+        maxBodyScore = 0;
         scoreBody = 0;
         scoreGrowth = 0;
         scorePoison = 0;
@@ -1263,13 +1254,14 @@ struct Mission{
 
 #include "Primitives/Score.h"
 #include "Primitives/Mission.h"
+#include <algorithm>
 
 class StatusManager{
 private:
     Score score;
     Mission mission;
 public:
-    StatusManager(int maxBody=10, int goalBody=10, int goalGrowth=5, int goalPoison=2, int goalGate=1);
+    StatusManager(int goalBody=10, int goalGrowth=5, int goalPoison=2, int goalGate=1);
 
     void scoreBody();
     void descoreBody();
@@ -1292,27 +1284,20 @@ public:
 
 #include "Snake-Game/StatusManager.h"
 
-StatusManager::StatusManager(int maxBody, int goalBody, int goalGrowth, int goalPoison, int goalGate):
-        score(Score(maxBody)), mission(Mission(goalBody, goalGrowth, goalPoison, goalGate)){
+StatusManager::StatusManager(int goalBody, int goalGrowth, int goalPoison, int goalGate):
+        score(), mission(Mission(goalBody, goalGrowth, goalPoison, goalGate)){
 }
 
 void StatusManager::scoreBody(){
     score.scoreBody++;
-    if(score.scoreBody > score.MAX_SCORE_BODY)
-        score.scoreBody--;
-    if(mission.goalBody <= score.scoreBody)
+    score.maxBodyScore = std::max(score.maxBodyScore, score.scoreBody);
+    if(mission.goalBody <= score.maxBodyScore)
         mission.achBody = true;
-    else
-        mission.achBody = false;
 }
 void StatusManager::descoreBody(){
     score.scoreBody--;
     if(score.scoreBody < 0)
         score.scoreBody++;
-    if(mission.goalBody <= score.scoreBody)
-        mission.achBody = true;
-    else
-        mission.achBody = false;
 }
 void StatusManager::scoreGrowth(){
     score.scoreGrowth++;
@@ -1378,8 +1363,6 @@ public:
 
 class Snake{
 private:
-    int MAX_LENGTH = 10;                 // 현재 Snake의 최대 길이
-
     int length = 3;                            // 현재 Snake의 길이
     int direction = 0;                         // 현재 Snake의 이동 방향
     int portalRemaining = 0;                   // 현재 Snake가 portal에 의해 이동되지 않은 길이
@@ -1397,7 +1380,7 @@ private:
     void poisonMove(Point newH);               // 위치 newH로 독 이동 - Poison 아이템 효과
 public:
     Snake(){}
-    Snake(MapManager& gameMap, Point headPoint={0, 0}, int length=3, int direction=0, int MAX_LENGTH=10);
+    Snake(MapManager& gameMap, Point headPoint={0, 0}, int length=3, int direction=0);
 
     // direction방향으로 portals의 포탈을 가진 gameMap맵에서 이동연산 수행
     // 섭취한 아이템을 반환, 유효하지 않은 상황이 발생할 경우 ERROR 반환
@@ -1463,7 +1446,7 @@ public:
 
 #include "Snake-Game/Snake-Game.h"
 
-Snake::Snake(MapManager& gameMap, Point headPoint, int length, int direction, int MAX_LENGTH): MAX_LENGTH(MAX_LENGTH){
+Snake::Snake(MapManager& gameMap, Point headPoint, int length, int direction){
     this->length = length;
     this->direction = direction;
     portalRemaining = 0;
@@ -1552,8 +1535,6 @@ Item Snake::move(int direction, MapManager& gameMap, StatusManager& status, std:
         case GATE:
             break;
     }
-    while(length > MAX_LENGTH)
-        popBack();
     if(!checkValidity(gameMap))
         ret = ERROR;
     return ret;
@@ -1586,7 +1567,7 @@ int Snake::getDirection(){
 }
 
 GameRunner::GameRunner(const MapItem& gameMapInfo, int length):
-    status(StatusManager(gameMapInfo.MAX_SCORE_BODY, gameMapInfo.goalBody, gameMapInfo.goalGrowth, gameMapInfo.goalPoison, gameMapInfo.goalGate)){
+    status(StatusManager(gameMapInfo.goalBody, gameMapInfo.goalGrowth, gameMapInfo.goalPoison, gameMapInfo.goalGate)){
     this->gameMap = gameMapInfo.gameMap;
     for(int y = 0; y < this->gameMap.height; ++y){
         for(int x = 0; x < this->gameMap.width; ++x){
@@ -1601,7 +1582,7 @@ GameRunner::GameRunner(const MapItem& gameMapInfo, int length):
         }
     }
     for(int i = 0; i < length; ++i) status.scoreBody();
-    snake = Snake(this->gameMap, gameMapInfo.startPoint, length, gameMapInfo.startDirection, gameMapInfo.MAX_SCORE_BODY);
+    snake = Snake(this->gameMap, gameMapInfo.startPoint, length, gameMapInfo.startDirection);
 }
 Point GameRunner::getRandomItemPoint(std::queue<std::pair<IndexedPoint, int>>& timeQ){
     IndexedPoint ip = {-1, {-1, -1}};

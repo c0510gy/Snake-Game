@@ -7,13 +7,14 @@
 #define SNAKE_SCORE
 
 struct Score{
-    const int MAX_SCORE_BODY;
+    int maxBodyScore;
     int scoreBody;
     int scoreGrowth;
     int scorePoison;
     int scoreGate;
 
-    Score(int maxBody=10): MAX_SCORE_BODY(maxBody){
+    Score(){
+        maxBodyScore = 0;
         scoreBody = 0;
         scoreGrowth = 0;
         scorePoison = 0;

@@ -8,13 +8,14 @@
 
 #include "Primitives/Score.h"
 #include "Primitives/Mission.h"
+#include <algorithm>
 
 class StatusManager{
 private:
     Score score;
     Mission mission;
 public:
-    StatusManager(int maxBody=10, int goalBody=10, int goalGrowth=5, int goalPoison=2, int goalGate=1);
+    StatusManager(int goalBody=10, int goalGrowth=5, int goalPoison=2, int goalGate=1);
 
     void scoreBody();
     void descoreBody();
