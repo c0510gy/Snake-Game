@@ -11,7 +11,6 @@ goalBody=10
 goalGrowth=5
 goalPoison=2
 goalGate=1
-maxBodyScore=10
 mapData=
 21111111111111111111112
 10000000000000000000001
