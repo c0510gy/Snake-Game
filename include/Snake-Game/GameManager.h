@@ -6,15 +6,9 @@
 #ifndef SNAKE_GAME_GAME_MANAGER
 #define SNAKE_GAME_GAME_MANAGER
 
-#include <iostream>
-#include <fstream>
-#include <string>
 #include <ncurses.h>
 #include <unistd.h>
-#include "Score.h"
-#include "Point.h"
 #include "Snake-Game.h"
-#include "MapItem.h"
 
 #define WINDOW_OFFSET 3
 

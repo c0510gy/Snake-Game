@@ -12,7 +12,6 @@ GameManager::~GameManager() {
     getch();
     delwin(windowScoreBoard);
     delwin(windowGoalBoard);
-    endwin();
 }
 
 void GameManager::play() {
@@ -102,6 +101,8 @@ void GameManager::play() {
             // 종료됨
             printw("Game Over");
             refresh();
+            endwin();
+            exit(1);
             break;
         }
         // 딜레이 안주면 게임이 너무 빨리 진행됨.
@@ -112,12 +113,7 @@ void GameManager::play() {
 }
 
 void GameManager::initializeWindow() {
-    initscr(); // ncurses 시작
-    cbreak();
-    noecho(); 
-    curs_set(0); // 커서 blink 없이
     nodelay(stdscr,TRUE); // 입력 대기 없이(continuous 하게 게임 진행)
-    keypad(stdscr, true); // 화살표 입력 받기 위해 
     
     getmaxyx(stdscr, maxHeight, maxWidth);
 
