@@ -20,7 +20,7 @@ struct MapItem{
     int goalGrowth;
     int goalPoison;
     int goalGate;
-    int MAX_SCORE_BODY;
+    int maxBodyScore;
     int startDirection;
 
     MapManager gameMap;

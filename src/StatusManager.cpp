@@ -5,27 +5,20 @@
 
 #include "Snake-Game/StatusManager.h"
 
-StatusManager::StatusManager(int maxBody, int goalBody, int goalGrowth, int goalPoison, int goalGate):
-        score(Score(maxBody)), mission(Mission(goalBody, goalGrowth, goalPoison, goalGate)){
+StatusManager::StatusManager(int goalBody, int goalGrowth, int goalPoison, int goalGate):
+        score(), mission(Mission(goalBody, goalGrowth, goalPoison, goalGate)){
 }
 
 void StatusManager::scoreBody(){
     score.scoreBody++;
-    if(score.scoreBody > score.MAX_SCORE_BODY)
-        score.scoreBody--;
-    if(mission.goalBody <= score.scoreBody)
+    score.maxBodyScore = std::max(score.maxBodyScore, score.scoreBody);
+    if(mission.goalBody <= score.maxBodyScore)
         mission.achBody = true;
-    else
-        mission.achBody = false;
 }
 void StatusManager::descoreBody(){
     score.scoreBody--;
     if(score.scoreBody < 0)
         score.scoreBody++;
-    if(mission.goalBody <= score.scoreBody)
-        mission.achBody = true;
-    else
-        mission.achBody = false;
 }
 void StatusManager::scoreGrowth(){
     score.scoreGrowth++;

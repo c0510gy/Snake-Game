@@ -1,6 +1,6 @@
 /* 
  * title: FileManager.h
- * author: 
+ * author: ty
  */
 
 #ifndef SNAKE_FILE_MANAGER
@@ -18,10 +18,7 @@ private:
     std::ifstream inFile;
 
     bool isFileExist(std::string filePath);
-public:
-    // FileManager();
-    // FileManager(string filePath);
-    
+public:    
     void writeMap(const MapItem& map, std::string filePath);
     MapItem readMap(std::string filePath);
 
