@@ -81,7 +81,6 @@ void MenuManager::startMode(int mode) {
         case MODE_START_GAME:
             destroyMenu();
             GlobalStateManager().startGame();
-            endwin();
             break;
         case MODE_SETTING:
             break;

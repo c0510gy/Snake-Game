@@ -31,9 +31,9 @@ private:
 
     GameRunner mGameRunner;
 
-    WINDOW *windowScoreBoard;
-    WINDOW *windowGoalBoard;
-    WINDOW *windowPause;
+    WINDOW* windowScoreBoard;
+    WINDOW* windowGoalBoard;
+    WINDOW* windowPause;
 
     void initializeWindow();
     void validateWindow();
@@ -45,6 +45,7 @@ private:
     void updateScoreStatus(const Score& score);
     void updateMissionStatus(const Mission& mission);
 
+    void showMapIntro();
     void showPauseWindow();
 };
 

@@ -29,14 +29,66 @@ void GlobalStateManager::startGame() {
     refresh();
     
     // 1-st map
-    startGame("./tutorial1.txt", "hi");
-    // 2-nd map
-    startGame("./tutorial2.txt", "hi");
-    // 3-rd map
-    startGame("./tutorial3.txt", "hi");
-    // 4-th map
-    startGame("./tutorial4.txt", "hi");
+    if(!showMapIntro("./tutorial1.txt", "hi")) {
+        run();
+    }
 
+    // 2-nd map
+    if(!showMapIntro("./tutorial2.txt", "hi")) {
+        run();
+    }
+    // 3-rd map
+    if(!showMapIntro("./tutorial3.txt", "hi")) {
+        run();
+    }
+    // 4-th map
+    if(!showMapIntro("./tutorial4.txt", "hi")) {
+        run();
+    }
+
+}
+bool GlobalStateManager::showMapIntro(std::string mapDir, std::string userName) {
+    refresh();
+    FileManager fileManager;
+    MapItem items = fileManager.readMap(mapDir);
+
+    int maxWidth, maxHeight;
+
+    getmaxyx(stdscr, maxHeight, maxWidth);
+    int offsetx = (maxWidth - 50) / 2;
+    int offsety = (maxHeight - 8) / 2;
+
+    windowIntro = newwin(8, 50, offsety, offsetx);
+
+    std::string message;
+    message = "name : " + items.name;
+    mvwprintw(windowIntro, 2, 1, "%s %s", message.c_str());
+
+    message = "author : " + items.name;
+    mvwprintw(windowIntro, 3, 1, "%s", message.c_str());
+
+    message = "detail : " + items.name;
+    mvwprintw(windowIntro, 4, 1, "%s", message.c_str());
+
+    message = "Press any key to continue or 'q' to quit";
+    mvwprintw(windowIntro, 6, 1, "%s", message.c_str());
+
+    wborder(windowIntro, '|', '|', '-', '-', '+', '+', '+', '+');
+
+    wrefresh(windowIntro);
+    
+    int c = getch();
+    
+    wclear(windowIntro);
+    wrefresh(windowIntro);
+    delwin(windowIntro);
+
+    if(c == 'q' || c == 'Q') {
+        return 0;
+    }
+
+    startGame(mapDir, userName);
+    return 1;
 }
 
 void GlobalStateManager::startCustomGame() {

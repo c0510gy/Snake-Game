@@ -17,7 +17,6 @@ GameManager::~GameManager() {
     delwin(windowGoalBoard);
 }
 
-
 void GameManager::play() {
     int needToGameOver = 0;
     while (1)

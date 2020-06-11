@@ -11,17 +11,24 @@
 #include "GameManager.h"
 
 class GlobalStateManager {
+private:
+    WINDOW* windowIntro; 
+    void startGame(std::string mapDir, std::string userName);
 
 public:
     GlobalStateManager();
 
     void run();
-
-    void startGame(std::string mapDir, std::string userName);
+    
     void startGame();
+    bool showMapIntro(std::string mapDir, std::string userName);
+
     void startCustomGame();
+
     void startSetting();
+
     void startMapEditor();
+    
 
 };
 
