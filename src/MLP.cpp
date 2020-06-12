@@ -36,6 +36,12 @@ long double Perceptron<ActivationFunction, DActivationFunction>::getCalc(){
     return activationFunction(yout);
 }
 template <class ActivationFunction, class DActivationFunction>
+void Perceptron<ActivationFunction, DActivationFunction>::setWeights(const std::vector<long double>& weights, int bias){
+    this->bias = bias;
+    for(int j = 0; j < this->weights.size(); ++j)
+        this->weights[j] = weights[j];
+}
+template <class ActivationFunction, class DActivationFunction>
 void Perceptron<ActivationFunction, DActivationFunction>::gradientDescent(const std::vector<long double>& inputs, long double learningRate){
     for(int j = 0; j < numberOfWeights; ++j){
         weights[j] -= inputs[j] * dActivationFunction(yout) * error * learningRate;
@@ -55,7 +61,7 @@ long double Perceptron<ActivationFunction, DActivationFunction>::getNextError(in
 template <class ActivationFunction, class DActivationFunction>
 MLP<ActivationFunction, DActivationFunction>::MLP(const std::vector<int>& eachLayer){
     srand(time(NULL));
-    
+
     this->inputLayerNodes = eachLayer.front();
     this->hiddenLayers = eachLayer.size() - 2;
     this->outputLayerNodes = eachLayer.back();
@@ -68,6 +74,10 @@ MLP<ActivationFunction, DActivationFunction>::MLP(const std::vector<int>& eachLa
             network[layer].push_back(Perceptron<ActivationFunction, DActivationFunction>(preNodes));
         preNodes = eachLayer[layer + 1];
     }
+}
+template <class ActivationFunction, class DActivationFunction>
+void MLP<ActivationFunction, DActivationFunction>::setWeights(int layer, int pidx, const std::vector<long double>& weights, int bias){
+    network[layer - 1][pidx].setWeights(weights, bias);
 }
 template <class ActivationFunction, class DActivationFunction>
 std::vector<long double> MLP<ActivationFunction, DActivationFunction>::run(const std::vector<long double>& inputs){

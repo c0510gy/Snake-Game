@@ -12,17 +12,20 @@ int getRandomNum(int s, int e){
     return rand() * (e - s + 1) + s;
 }
 
-GA::GA(int population, int geneLength, double mutProb){
-    srand(time(NULL));
-
+void GA::buildGA(int population, int geneLength, double mutProb){
     this->population = population;
     this->geneLength = geneLength;
     this->mutProb = mutProb;
 
+    genes.clear();
     genes.resize(population);
     for(int j = 0; j < population; ++j)
         for(int i = 0; i < geneLength; ++i)
             genes[j].push_back(getRandomNum() * RANDOM_RANGE);
+}
+GA::GA(int population, int geneLength, double mutProb){
+    srand(time(NULL));
+    buildGA(population, geneLength, mutProb);
 }
 void GA::crossOver(int i1, int i2, int i3, long double prop){
     for(int j = 0; j < geneLength; ++j){
@@ -40,7 +43,7 @@ void GA::nextGen(const std::vector<long double>& scores){
     std::vector<int> idx;
     for(int j = 0; j < population; ++j) idx.push_back(j);
 
-    std::sort(idx.begin(), idx.end(), [&](int i1, int i2){
+    std::sort(idx.begin(), idx.end(), [&](int i1, int i2) -> bool {
         return scores[i1] < scores[i2];
     });
 

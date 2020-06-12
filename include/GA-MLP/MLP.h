@@ -31,6 +31,8 @@ public:
     long double calc(const std::vector<long double>& inputs);
     long double getCalc();
 
+    void setWeights(const std::vector<long double>& weights, int bias);
+
     void gradientDescent(const std::vector<long double>& inputs, long double learningRate=0.0015);
     void setError(long double error); // 현재 퍼셉트론에 대한 에러 설정
     long double getNextError(int inputIdx); // 이전 레이어의 inputIdx 퍼셉트론에 대한 에러 반환
@@ -45,7 +47,10 @@ private:
 
     void backpropagation(const std::vector<long double>& errors, long double learningRate=0.0015);
 public:
+    MLP(){}
     MLP(const std::vector<int>& eachLayer);
+
+    void setWeights(int layer, int pidx, const std::vector<long double>& weights, int bias);
 
     std::vector<long double> run(const std::vector<long double>& inputs);
     long double train(const std::vector<std::vector<long double>>& inputDataSet, const std::vector<int>& classifyDataSet, long double learningRate=0.0015);
