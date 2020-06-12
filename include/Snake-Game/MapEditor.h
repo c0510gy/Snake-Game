@@ -9,6 +9,7 @@
 #include <ncurses.h>
 #include <unistd.h>
 #include "Snake-Game.h"
+#include "FileManager.h"
 
 #define WINDOW_OFFSET 3
 
@@ -23,14 +24,14 @@ class MapEditor {
 public:
     MapEditor(const MapItem& map);
     ~MapEditor();
-    void edit(const MapItem& map, std::string filePath);
+    void edit(MapItem& map);
 private:
     int maxHeight, maxWidth;
     int gameMapHeight, gameMapWidth;
 
     void initializeWindow(const MapItem& map);
     void validateWindow(const MapItem& map);
-    void drawMap(const MapItem& map);
+    void initDrawMap(const MapManager& objMap);
     void initializeColors();
 };
 
