@@ -5,17 +5,19 @@
 
 #include "MLP.h"
 
-long double getRandomNum(){
-    return ((double) rand() / (RAND_MAX)) * 2 - 1;
-}
+namespace MLP_RANDOM{
+    long double getRandomNum(){
+        return ((double) rand() / (RAND_MAX)) * 2 - 1;
+    }
+};
 
 template <class ActivationFunction, class DActivationFunction>
 Perceptron<ActivationFunction, DActivationFunction>::Perceptron(int numberOfWeights){
     this->numberOfWeights = numberOfWeights;
-    bias = getRandomNum();
+    bias = MLP_RANDOM::getRandomNum();
     weights.resize(numberOfWeights);
     for(int j = 0; j < numberOfWeights; ++j)
-        weights[j] = getRandomNum();
+        weights[j] = MLP_RANDOM::getRandomNum();
 }
 template <class ActivationFunction, class DActivationFunction>
 long double Perceptron<ActivationFunction, DActivationFunction>::activationFunction(long double x){

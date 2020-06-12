@@ -28,7 +28,7 @@ void SnakeAILearner::setWeights(){
     const std::vector<std::vector<long double>>& genes = ga.getGenes();
     for(int j = 0; j < population; ++j){
         int geneidx = 0;
-        for(int layer = 1; layer < eachLayer.size(); ++j){
+        for(int layer = 1; layer < eachLayer.size(); ++layer){
             for(int p = 0; p < eachLayer[layer]; ++p){
                 std::vector<long double> weights;
                 for(int i = 0; i < eachLayer[layer - 1]; ++i)
@@ -42,7 +42,7 @@ int SnakeAILearner::runSimulation(int geneIdx){
     GameRunner gameRunner(mapItem);
     int direction = 0;
 
-    auto getIdxOfDirection = [](Point item, Point snake) -> int {
+    auto getIdxOfDirection = [&](Point item, Point snake) -> int {
         if(item.x > snake.x){
             if(item.y > snake.y)
                 return 4;
@@ -64,7 +64,7 @@ int SnakeAILearner::runSimulation(int geneIdx){
                 return 1;
         }
     };
-    auto getDist = [](Point p1, Point p2) -> int {
+    auto getDist = [&](Point p1, Point p2) -> int {
         return abs(p1.x - p2.x) + abs(p1.y - p2.y);
     };
     do{
@@ -80,18 +80,21 @@ int SnakeAILearner::runSimulation(int geneIdx){
         for(int y = 0; y < m.height; ++y){
             for(int x = 0; x < m.width; ++x){
                 switch(m.get(x, y)){
-                    case GROWTH:
-                        long double& dist = inputs[growthIdx + getIdxOfDirection(Point(x, y), head)];
-                        dist = std::min(dist, (long double)getDist(Point(x, y), head));
+                    case GROWTH: {
+                        long double& distGrowth = inputs[growthIdx + getIdxOfDirection(Point(x, y), head)];
+                        distGrowth = std::min(distGrowth, (long double)getDist(Point(x, y), head));
                         break;
-                    case POISON:
-                        long double& dist = inputs[poisonIdx + getIdxOfDirection(Point(x, y), head)];
-                        dist = std::min(dist, (long double)getDist(Point(x, y), head));
+                    }
+                    case POISON: {
+                        long double& distPoison = inputs[poisonIdx + getIdxOfDirection(Point(x, y), head)];
+                        distPoison = std::min(distPoison, (long double)getDist(Point(x, y), head));
                         break;
-                    case GATE:
-                        long double& dist = inputs[portalIdx + getIdxOfDirection(Point(x, y), head)];
-                        dist = std::min(dist, (long double)getDist(Point(x, y), head));
+                    }
+                    case GATE: {
+                        long double& distGate = inputs[portalIdx + getIdxOfDirection(Point(x, y), head)];
+                        distGate = std::min(distGate, (long double)getDist(Point(x, y), head));
                         break;
+                    }
                 }
             }
         }

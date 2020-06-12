@@ -11,6 +11,7 @@
 #include "GA-MLP/MLP.h"
 #include "GA-MLP/GA.h"
 #include <string>
+#include <vector>
 #include <algorithm>
 
 class SnakeAILearner{

@@ -45,6 +45,12 @@ tester: $(OBJECTS)
 mlpTester: $(OBJECTS)
 	g++ -std=c++14 -Wall -Wextra -g -lnCurses test/testMLP.cpp -Iinclude/GA-MLP -Llib build/MLP.o -o test/testMLP.o
 
+gaTester: $(OBJECTS)
+	g++ -std=c++14 -Wall -Wextra -g -lnCurses test/testGA.cpp -Iinclude/GA-MLP -Llib build/GA.o -o test/testGA.o
+
+snakeLearnerTester: $(OBJECTS)
+	g++ -std=c++14 -Wall -Wextra -g -lnCurses test/snakeLearning.cpp -Iinclude -Iinclude/Snake-Game -Iinclude/GA-MLP -Llib build/StatusManager.o build/Snake-Game.o build/Interface.o build/FileManager.o build/MLP.o build/GA.o build/Snake-AI-Learner.o -o test/snakeLearning.o
+
 .PHONY: clean
 clean:
 	-$(RM) $(BIN)/$(EXECUTABLE)
