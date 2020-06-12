@@ -12,14 +12,13 @@ MapEditor::~MapEditor() {
 }
 
 void MapEditor::edit(const MapItem& map, std::string filePath) {
-    drawMap(map);
     int y, x;
+    drawMap(map);
+    move(y + WINDOW_OFFSET, x + WINDOW_OFFSET);
     while (1)
     {
         int direction = 0;
         curs_set(1);
-
-        move(y + WINDOW_OFFSET, x + WINDOW_OFFSET);
         getyx(stdscr, y, x);
 
         int input = getch();
