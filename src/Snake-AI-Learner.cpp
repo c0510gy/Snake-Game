@@ -123,13 +123,22 @@ int SnakeAILearner::runSimulation(int geneIdx){
 }
 int SnakeAILearner::nextGen(){
     setWeights();
-    int bestScore = 0;
+    int bestScore = 0, bestIdx = 0;
     std::vector<long double> scores;
     for(int j = 0; j < population; ++j){
         int score = runSimulation(j);
-        bestScore = std::max(bestScore, score);
+        if(bestScore < score){
+            bestScore = score;
+            bestIdx = j;
+        }
         scores.push_back(score);
     }
+    bestGene.clear();
+    for(int j = 0; j < ga.getGenes()[bestIdx].size(); ++j)
+        bestGene.push_back(ga.getGenes()[bestIdx][j]);
     ga.nextGen(scores);
     return bestScore;
+}
+std::vector<long double> SnakeAILearner::getBestGene(){
+    return bestGene;
 }

@@ -23,6 +23,8 @@ private:
     GA ga;
     MapItem mapItem;
 
+    std::vector<long double> bestGene;
+
     void setWeights();
     int runSimulation(int geneIdx);
 
@@ -30,6 +32,7 @@ public:
     SnakeAILearner(std::string mapDir, const std::vector<int>& eachHiddenLayer, int population, double mutProb=0.05);
 
     int nextGen();
+    std::vector<long double> getBestGene();
 };
 
 #endif
