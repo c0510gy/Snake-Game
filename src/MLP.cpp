@@ -55,6 +55,7 @@ long double Perceptron<ActivationFunction, DActivationFunction>::getNextError(in
 template <class ActivationFunction, class DActivationFunction>
 MLP<ActivationFunction, DActivationFunction>::MLP(const std::vector<int>& eachLayer){
     srand(time(NULL));
+    
     this->inputLayerNodes = eachLayer.front();
     this->hiddenLayers = eachLayer.size() - 2;
     this->outputLayerNodes = eachLayer.back();
