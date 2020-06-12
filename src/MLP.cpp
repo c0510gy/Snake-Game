@@ -101,6 +101,36 @@ void MLP<ActivationFunction, dActivationFunction>::backpropagation(const std::ve
         }
         nextErrors = tempErrors;
         for(int j = 0; j < nextErrors.size(); ++j)
-            nextErrors[j] /= network[layer].size();
+            nextErrors[j] /= (int)network[layer].size();
     }
+}
+template <class ActivationFunction, class dActivationFunction>
+long double MLP<ActivationFunction, dActivationFunction>::train(const std::vector<std::vector<long double>>& inputDataSet, std::vector<int> classifyDataSet, long double learningRatet){
+    std::vector<long double> errors(outputLayerNodes, 0);
+    for(int j = 0; j < dataSet.size(); ++j){
+        std::vector<long double> outputs = rnu(dataSet[j]);
+        std::vector<long double> target(outputLayerNodes, 0);
+        target[classifyDataSet[j] - 1] = 1;
+        
+        for(int p = 0; p < outputLayerNodes; ++p)
+            errors[p] += outputs[p] - target[p];
+    }
+    for(int p = 0; p < outputLayerNodes; ++p)
+        errors[p] /= (int)dataSet.size();
+    
+    backpropagation(errors, learningRatet);
+
+    long double acc = 0;
+    for(int j = 0; j < dataSet.size(); ++j){
+        std::vector<long double> outputs = rnu(dataSet[j]);
+        std::vector<long double> target(outputLayerNodes, 0);
+        target[classifyDataSet[j] - 1] = 1;
+        
+        long double nacc = 0;
+        for(int p = 0; p < outputLayerNodes; ++p)
+            nacc += 1 - abs(outputs[p] - target[p]);
+        acc += nacc / 3;
+    }
+    acc /= (int)dataSet.size();
+    return acc;
 }

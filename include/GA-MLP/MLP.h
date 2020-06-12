@@ -40,11 +40,12 @@ private:
     std::vector<long double> inputLayer;
     std::vector<std::vector<Perceptron<ActivationFunction, dActivationFunction>>> network;
 
+    void backpropagation(const std::vector<long double>& errors, long double learningRate=0.0015);
 public:
     MLP(const std::vector<int>& eachLayer);
 
     std::vector<long double>& run(const std::vector<long double>& inputs);
-    void backpropagation(const std::vector<long double>& errors, long double learningRate=0.0015);
+    long double train(const std::vector<std::vector<long double>>& inputDataSet, std::vector<int> classifyDataSet, long double learningRate=0.0015);
 };
 
 #endif
