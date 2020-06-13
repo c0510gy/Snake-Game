@@ -13,13 +13,6 @@
 
 #define WINDOW_OFFSET 3
 
-#define SCORE_BOARD_WIDTH 15
-#define SCORE_BOARD_HEIGHT 10
-
-#define GOAL_BOARD_WIDTH 15
-#define GOAL_BOARD_HEIGHT 10
-
-
 class MapEditor {
 public:
     MapEditor(const MapItem& map);
