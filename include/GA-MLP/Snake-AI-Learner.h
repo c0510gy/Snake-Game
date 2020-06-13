@@ -13,9 +13,12 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <iostream>
 
 class SnakeAILearner{
 private:
+    const int ITERATION_FOR_ONE_GENE = 3;
+
     int inputLayerNodes, hiddenLayers, outputLayerNodes;
     int population;
     std::vector<int> eachLayer;
@@ -31,7 +34,7 @@ private:
 public:
     SnakeAILearner(std::string mapDir, const std::vector<int>& eachHiddenLayer, int population, double mutProb=0.05);
 
-    int nextGen();
+    long double nextGen();
     std::vector<long double> getBestGene();
 };
 

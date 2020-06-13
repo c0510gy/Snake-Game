@@ -67,16 +67,18 @@ int SnakeAILearner::runSimulation(int geneIdx){
     auto getDist = [&](Point p1, Point p2) -> int {
         return abs(p1.x - p2.x) + abs(p1.y - p2.y);
     };
+    int frames = 0;
     do{
         direction = gameRunner.getDirection();
         const MapManager& m = gameRunner.getMap();
 
-        std::vector<long double> inputs(inputLayerNodes, 1000);
+        std::vector<long double> inputs(inputLayerNodes, 0);
         int growthIdx = 0;
         int poisonIdx = growthIdx + 8;
         int portalIdx = poisonIdx + 8;
         int obsIdx = portalIdx + 8;
         Point head = gameRunner.getHead();
+        /*
         for(int y = 0; y < m.height; ++y){
             for(int x = 0; x < m.width; ++x){
                 switch(m.get(x, y)){
@@ -98,6 +100,32 @@ int SnakeAILearner::runSimulation(int geneIdx){
                 }
             }
         }
+        */
+        int itemDirection[8][2] = {{-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}};
+        for(int j = 0; j < 8; ++j){
+            int x = head.x + itemDirection[j][0];
+            int y = head.y + itemDirection[j][1];
+            bool existGrowth = false;
+            bool existPoison = false;
+            bool existPortal = false;
+            while(m.get(x, y) != ERROR && m.get(x, y) != WALL && m.get(x, y) != IMWALL && m.get(x, y) != SNAKE){
+                if(m.get(x, y) == GROWTH)
+                    existGrowth = true;
+                if(m.get(x, y) == POISON)
+                    existPoison = true;
+                if(m.get(x, y) == GATE)
+                    existPortal = true;
+                
+                x += itemDirection[j][0];
+                y += itemDirection[j][1];
+            }
+            if(existGrowth)
+                inputs[growthIdx + j] = 1;
+            if(existPoison)
+                inputs[poisonIdx + j] = 1;
+            if(existPortal)
+                inputs[portalIdx + j] = 1;
+        }
         int obsDirection[4][2] = {{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
         for(int j = 0; j < 4; ++j){
             int x = head.x + obsDirection[j][0];
@@ -113,25 +141,36 @@ int SnakeAILearner::runSimulation(int geneIdx){
 
         std::vector<long double> outputs = mlps[geneIdx].run(inputs);
         for(int j = 0; j < 4; ++j){
-            if(outputs[j] >= 0.5 && outputs[j] > outputs[direction])
+            if(outputs[j] >= 0 && outputs[j] > outputs[direction])
                 direction = j;
         }
+        ++frames;
     }while(gameRunner.nextFrame(direction));
 
-    int score = gameRunner.getStatus().getScore().scoreBody;
+    int apple = gameRunner.getStatus().getScore().scoreGrowth;
+    int poison = gameRunner.getStatus().getScore().scorePoison;
+    int portal = gameRunner.getStatus().getScore().scoreGate;
+    int score = apple * apple - poison * poison + frames + portal * 2;
     return score;
 }
-int SnakeAILearner::nextGen(){
+long double SnakeAILearner::nextGen(){
     setWeights();
-    int bestScore = 0, bestIdx = 0;
+    long double bestScore = 0, bestIdx = 0;
     std::vector<long double> scores;
     for(int j = 0; j < population; ++j){
-        int score = runSimulation(j);
-        if(bestScore < score){
-            bestScore = score;
+        long double meanScore = 0;
+
+        for(int k = 0; k < ITERATION_FOR_ONE_GENE; ++k){
+            long double score = runSimulation(j);
+            meanScore += score;
+        }
+        meanScore /= (long double)ITERATION_FOR_ONE_GENE;
+
+        if(bestScore < meanScore){
+            bestScore = meanScore;
             bestIdx = j;
         }
-        scores.push_back(score);
+        scores.push_back(meanScore);
     }
     bestGene.clear();
     for(int j = 0; j < ga.getGenes()[bestIdx].size(); ++j)

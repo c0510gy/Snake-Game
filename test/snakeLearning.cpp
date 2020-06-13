@@ -9,10 +9,13 @@
 using namespace std;
 
 int main(){
-    vector<int> eachHiddenLayer = {30, 20};
-    SnakeAILearner ai("./mapData/1.txt", eachHiddenLayer, 100);
-    for(int g = 1; g < 10000; ++g){
-        cout << "generation " << g << ": " << ai.nextGen() << "\n";
+    vector<int> eachHiddenLayer = {20, 12};
+    SnakeAILearner ai("./mapData/1.txt", eachHiddenLayer, 1000);
+    for(int g = 1; ; ++g){
+        long double score = ai.nextGen();
+        cout << "generation " << g << ": " << score << "\n";
+        if(score > 10000)
+            break;
     }
     vector<long double> bestGene = ai.getBestGene();
     for(int j = 0; j < bestGene.size(); ++j){
