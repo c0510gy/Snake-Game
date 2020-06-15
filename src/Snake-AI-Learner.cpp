@@ -38,7 +38,7 @@ void SnakeAILearner::setWeights(){
         }
     }
 }
-int SnakeAILearner::runSimulation(int geneIdx){
+std::pair<long double, int> SnakeAILearner::runSimulation(int geneIdx){
     GameRunner gameRunner(mapItem);
     int direction = 0;
 
@@ -68,6 +68,8 @@ int SnakeAILearner::runSimulation(int geneIdx){
         return abs(p1.x - p2.x) + abs(p1.y - p2.y);
     };
     int frames = 0;
+    int leftFrames = 100;
+    int prevGrowth = 0;
     do{
         direction = gameRunner.getDirection();
         const MapManager& m = gameRunner.getMap();
@@ -145,38 +147,53 @@ int SnakeAILearner::runSimulation(int geneIdx){
                 direction = j;
         }
         ++frames;
+        if(gameRunner.getStatus().getScore().scorePoison > 0 || frames > 100000)
+            break;
+        if(gameRunner.getStatus().getScore().scoreGrowth > prevGrowth){
+            prevGrowth = gameRunner.getStatus().getScore().scoreGrowth;
+            leftFrames += 300;
+        }
+        --leftFrames;
+        if(leftFrames <= 0)
+            break;
     }while(gameRunner.nextFrame(direction));
 
-    int apple = gameRunner.getStatus().getScore().scoreGrowth;
-    int poison = gameRunner.getStatus().getScore().scorePoison;
-    int portal = gameRunner.getStatus().getScore().scoreGate;
-    int score = apple * apple - poison * poison + frames + portal * 2;
-    return score;
+    long double apple = gameRunner.getStatus().getScore().scoreGrowth;
+    long double poison = gameRunner.getStatus().getScore().scorePoison;
+    long double portal = gameRunner.getStatus().getScore().scoreGate;
+    long double score = std::min(frames, 1000) * pow(apple - poison, 3) + portal * 2;
+    return std::pair<long double, int>(score, gameRunner.getStatus().getScore().scoreBody);
 }
-long double SnakeAILearner::nextGen(){
+std::pair<long double, long double> SnakeAILearner::nextGen(){
     setWeights();
-    long double bestScore = 0, bestIdx = 0;
+    long double bestScore = 0, bestIdx = 0, bestApple = 0;
     std::vector<long double> scores;
     for(int j = 0; j < population; ++j){
-        long double meanScore = 0;
+        long double minScore = 0, minBody = 0;
 
         for(int k = 0; k < ITERATION_FOR_ONE_GENE; ++k){
-            long double score = runSimulation(j);
-            meanScore += score;
+            std::pair<long double, int> res = runSimulation(j);
+            long double score = res.first;
+            if(k == 0 || minScore > score){
+                minScore = score;
+                minBody = res.second;
+            }
         }
-        meanScore /= (long double)ITERATION_FOR_ONE_GENE;
+        //meanScore /= (long double)ITERATION_FOR_ONE_GENE;
+        //meanApple /= (long double)ITERATION_FOR_ONE_GENE;
 
-        if(bestScore < meanScore){
-            bestScore = meanScore;
+        if(bestScore < minScore){
+            bestScore = minScore;
+            bestApple = minBody;
             bestIdx = j;
         }
-        scores.push_back(meanScore);
+        scores.push_back(minScore);
     }
     bestGene.clear();
     for(int j = 0; j < ga.getGenes()[bestIdx].size(); ++j)
         bestGene.push_back(ga.getGenes()[bestIdx][j]);
     ga.nextGen(scores);
-    return bestScore;
+    return std::pair<long double, long double>(bestScore, bestApple);
 }
 std::vector<long double> SnakeAILearner::getBestGene(){
     return bestGene;

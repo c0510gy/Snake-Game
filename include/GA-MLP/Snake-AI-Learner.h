@@ -29,12 +29,12 @@ private:
     std::vector<long double> bestGene;
 
     void setWeights();
-    int runSimulation(int geneIdx);
+    std::pair<long double, int> runSimulation(int geneIdx);
 
 public:
     SnakeAILearner(std::string mapDir, const std::vector<int>& eachHiddenLayer, int population, double mutProb=0.05);
 
-    long double nextGen();
+    std::pair<long double, long double> nextGen();
     std::vector<long double> getBestGene();
 };
 

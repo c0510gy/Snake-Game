@@ -51,6 +51,9 @@ gaTester: $(OBJECTS)
 snakeLearnerTester: $(OBJECTS)
 	g++ -std=c++14 -Wall -Wextra -g -lnCurses test/snakeLearning.cpp -Iinclude -Iinclude/Snake-Game -Iinclude/GA-MLP -Llib build/StatusManager.o build/Snake-Game.o build/Interface.o build/FileManager.o build/MLP.o build/GA.o build/Snake-AI-Learner.o -o test/snakeLearning.o
 
+snakeAITester: $(OBJECTS)
+	g++ -std=c++14 -Wall -Wextra -g -lnCurses test/testSnakeAI.cpp -Iinclude -Iinclude/Snake-Game -Iinclude/GA-MLP -Llib build/StatusManager.o build/Snake-Game.o build/Interface.o build/FileManager.o build/MLP.o build/GA.o build/Snake-AI-Learner.o build/Snake-AI.o -o test/testSnakeAI.o
+
 .PHONY: clean
 clean:
 	-$(RM) $(BIN)/$(EXECUTABLE)

@@ -49,15 +49,23 @@ void GA::nextGen(const std::vector<long double>& scores){
         return scores[i1] < scores[i2];
     });
 
+    std::vector<long double> prefixSum;
+    prefixSum.push_back(0);
+    long double sum = 0;
+    for(int j = population / 2; j < population; ++j){
+        sum += scores[idx[j]];
+        prefixSum.push_back(sum + 1);
+    }
+
     for(int j = 0; j < population / 2; ++j){
-        int i1 = GA_RANDOM::getRandomNum(population / 2, population - 1);
+        int i1 = std::lower_bound(prefixSum.begin(), prefixSum.end(), GA_RANDOM::getRandomNum(0, sum)) - prefixSum.begin();
         int i2;
         do{
-            i2 = GA_RANDOM::getRandomNum(population / 2, population - 1);
+            i2 = std::lower_bound(prefixSum.begin(), prefixSum.end(), GA_RANDOM::getRandomNum(0, sum)) - prefixSum.begin();
         }while(i1 == i2);
-        
-        i1 = idx[i1];
-        i2 = idx[i2];
+
+        i1 = idx[i1 + population / 2 - 1];
+        i2 = idx[i2 + population / 2 - 1];
         
         long double prop = 0.5;
         if(scores[i1] + scores[i2] > 0)

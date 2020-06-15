@@ -8,13 +8,14 @@
 
 #include <algorithm>
 #include <vector>
+#include <iostream>
 // For random
 #include <cstdlib>
 #include <ctime>
 
 class GA{
 private:
-    const int RANDOM_RANGE = 10;
+    const int RANDOM_RANGE = 1;
 
     int population;
     int geneLength;
