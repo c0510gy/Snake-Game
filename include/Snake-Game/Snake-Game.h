@@ -107,6 +107,7 @@ public:
     const MapManager& getMap();             // 현재 진행중인 게임의 맵을 반환
     const StatusManager& getStatus();       // 현재 진행중인 게임의 상태 (점수, 미션) 반환
     int getDirection();                     // 현재 Snake의 진행중인 방향 반환
+    Point getHead();                        // 현재 Snake의 머리 좌표 반환
 };
 
 #endif

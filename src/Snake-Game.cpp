@@ -255,3 +255,6 @@ const StatusManager& GameRunner::getStatus(){
 int GameRunner::getDirection(){
     return snake.getDirection();
 }
+Point GameRunner::getHead(){
+    return snake.getHead();
+}
