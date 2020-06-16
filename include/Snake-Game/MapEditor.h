@@ -15,16 +15,23 @@
 
 class MapEditor {
 public:
-    MapEditor(const MapItem& map);
+    MapEditor(MapItem& map);
     ~MapEditor();
-    void edit(MapItem& map);
+
+    void edit();
+    void showInputWindow();
 private:
     int maxHeight, maxWidth;
     int gameMapHeight, gameMapWidth;
 
-    void initializeWindow(const MapItem& map);
-    void validateWindow(const MapItem& map);
-    void initDrawMap(const MapManager& objMap);
+    MapItem userMapItem;
+
+    WINDOW* windowInfoInput;
+
+    void initializeWindow();
+    void validateWindow();
+    void initDrawMap();
+    void initSetMap();
     void initializeColors();
 };
 

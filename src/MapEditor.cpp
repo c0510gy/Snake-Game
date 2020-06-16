@@ -1,8 +1,8 @@
 #include "Snake-Game/MapEditor.h"
 #include <iostream>
 
-MapEditor::MapEditor(const MapItem& map) {
-    initializeWindow(map);
+MapEditor::MapEditor(MapItem& map) : userMapItem(map){
+    initializeWindow();
     initializeColors();
 }
 
@@ -11,10 +11,12 @@ MapEditor::~MapEditor() {
     getch();
 }
 
-void MapEditor::edit(MapItem& map) {
-    MapManager objMap = map.gameMap;
+void MapEditor::edit() {
+    initSetMap();
+
+    MapManager objMap = userMapItem.gameMap;
     int y, x;
-    initDrawMap(objMap);
+    initDrawMap();
     move(WINDOW_OFFSET, WINDOW_OFFSET);
     while (1)
     {
@@ -67,9 +69,9 @@ void MapEditor::edit(MapItem& map) {
         //refresh를 invoke 해줘야 ncurses가 화면에 그려줌
         refresh();
         if(saveFlag) {
-            map.gameMap = objMap;
+            userMapItem.gameMap = objMap;
             FileManager test;
-            test.writeMap(map, "./userchange"+map.name+".txt");
+            test.writeMap(userMapItem, "./userchange" + userMapItem.name + ".txt");
             // 종료
             printw("Save!");
             refresh();
@@ -84,7 +86,23 @@ void MapEditor::edit(MapItem& map) {
     }
 }
 
-void MapEditor::initDrawMap(const MapManager& objMap) {
+void MapEditor::initSetMap() {
+    MapManager objMap = userMapItem.gameMap;
+    for (int y = 0; y < objMap.height; ++y)
+    {
+        for (int x = 0; x < objMap.width; ++x)
+        {
+            if(y == 0 || y == objMap.height-1)
+                objMap.set(x, y, WALL);
+            else if(x == 0 || x == objMap.width-1)
+                objMap.set(x, y, WALL);
+        }
+    }
+    userMapItem.gameMap = objMap;
+}
+
+void MapEditor::initDrawMap() {
+    MapManager objMap = userMapItem.gameMap;
     for (int y = 0; y < objMap.height; ++y)
     {
         for (int x = 0; x < objMap.width; ++x)
@@ -118,19 +136,18 @@ void MapEditor::initDrawMap(const MapManager& objMap) {
     }
 }
 
-void MapEditor::initializeWindow(const MapItem& map) {
+void MapEditor::initializeWindow() {
     nodelay(stdscr,TRUE); // 입력 대기 없이(continuous 하게 게임 진행)
     
     getmaxyx(stdscr, maxHeight, maxWidth);
 
-    const MapManager objMap = map.gameMap;
-    gameMapHeight = objMap.height;
-    gameMapWidth = objMap.width;
+    // const MapManager objMap = userMapItem.gameMap;
+    // gameMapHeight = objMap.height;
+    // gameMapWidth = objMap.width;
 }
 
-void MapEditor::validateWindow(const MapItem& map) {
-    
-    const MapManager objMap = map.gameMap;
+void MapEditor::validateWindow() {
+    const MapManager objMap = userMapItem.gameMap;
     int requiredHeight = objMap.height + WINDOW_OFFSET + 10;
     int requiredWidth = objMap.width + WINDOW_OFFSET + 10;
     if (requiredHeight > maxHeight || requiredWidth > maxWidth) {
@@ -160,4 +177,79 @@ void MapEditor::initializeColors() {
     init_pair(1, COLOR_WHITE, COLOR_WHITE); // wall
     init_pair(2, COLOR_GREEN, COLOR_GREEN); // snake
     init_pair(3, COLOR_WHITE, COLOR_MAGENTA); // gate
+}
+
+void MapEditor::showInputWindow() {
+    nodelay(stdscr, false);
+    refresh();
+    int offsetx = (maxWidth - (maxWidth / 2)) / 2;
+    int offsety = (maxHeight -(maxHeight / 2)) / 2;
+
+    windowInfoInput = newwin(maxHeight / 4, maxWidth / 2, offsety, offsetx);
+    wborder(windowInfoInput, '|', '|', '-', '-', '+', '+', '+', '+');
+
+    std::string message = "Please enter the basic properties for creating a new map. \n";
+    std::string name_key = "Name = ";
+    std::string name = "";
+    std::string width_key = "Width = ";
+    std::string width = "";
+    std::string height_key = "Height = ";
+    std::string height = "";
+
+    mvwprintw(windowInfoInput, 1, 10, "%s", message.c_str());
+    mvwprintw(windowInfoInput, 2, 10, "%s", name_key.c_str());
+    mvwprintw(windowInfoInput, 3, 10, "%s", width_key.c_str());
+    mvwprintw(windowInfoInput, 4, 10, "%s", height_key.c_str());
+
+    mvwprintw(windowInfoInput, 6, 10, "%s", "You can move between items with the upper and lower keys.");
+    mvwprintw(windowInfoInput, 7, 10, "%s", "Press Enter key to save.");
+    wrefresh(windowInfoInput);
+
+    curs_set(0);
+
+    int tmp_idx = 2;
+    while (1)
+    {
+        int c = getch();
+        switch(tmp_idx){
+            case(2):
+                name += c;
+                name_key += c;
+                mvwprintw(windowInfoInput, 2, 10, "%s", name_key.c_str());
+                wrefresh(windowInfoInput);
+                break;
+            case(3):
+                width += c;
+                width_key += c;
+                mvwprintw(windowInfoInput, 3, 10, "%s", width_key.c_str());
+                wrefresh(windowInfoInput);
+                break;
+            case(4):
+                height += c;
+                height_key += c;
+                mvwprintw(windowInfoInput, 4, 10, "%s", height_key.c_str());
+                wrefresh(windowInfoInput);
+                break;
+        } 
+        
+        if(c == '\n' && tmp_idx < 4) {
+            ++tmp_idx;
+        }
+        else if(c == '\n' && tmp_idx == 4){
+            break; 
+        }
+    }
+
+    MapManager tmpinit(atoi(width.c_str()), atoi(height.c_str()));
+    userMapItem.name = name;
+    userMapItem.gameMap = tmpinit;
+
+    refresh();
+    endwin();
+
+    wclear(windowInfoInput);
+    wrefresh(windowInfoInput);
+    delwin(windowInfoInput);
+    nodelay(stdscr, true);
+    getch();
 }
