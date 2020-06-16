@@ -4,7 +4,8 @@ MenuManager::MenuManager() {
     initializeMenu();
     
     modesName.push_back("Start Game");
-    modesName.push_back("Settings");
+    modesName.push_back("P vs AI");
+    modesName.push_back("Custom Game");
     modesName.push_back("Edit Map");
     modesName.push_back("Exit");
 }
@@ -103,7 +104,11 @@ void MenuManager::startMode(int mode) {
             destroyMenu();
             GlobalStateManager().startGame();
             break;
-        case MODE_SETTING:
+        case MODE_AI:
+            GlobalStateManager().startgameWithAi();
+            break;
+        case MODE_CUSTOM_GAME:
+            GlobalStateManager().startGame("./putCustomGameMap.txt", "username^^");
             break;
         case MODE_EDIT_MAP:
             destroyMenu();

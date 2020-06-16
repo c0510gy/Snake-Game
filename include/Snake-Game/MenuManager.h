@@ -16,9 +16,11 @@
 #define MENU_WINDOW_HEIGHT 10
 
 #define MODE_START_GAME 0
-#define MODE_SETTING 1
-#define MODE_EDIT_MAP 2
-#define MODE_EXIT 3
+#define MODE_AI 1
+#define MODE_CUSTOM_GAME 2
+#define MODE_EDIT_MAP 3
+#define MODE_EXIT 4
+
 
 
 class MenuManager {

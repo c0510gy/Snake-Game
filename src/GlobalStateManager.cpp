@@ -14,39 +14,6 @@ void GlobalStateManager::run() {
     menuManager.destroyMenu();
 }
 
-void GlobalStateManager::startGame(std::string mapDir, std::string userName) {
-    FileManager fileManager;
-    MapItem items = fileManager.readMap(mapDir);
-    UserItem users = fileManager.readUser(userName);
-
-    GameRunner myGame(items);
-    GameManager gameManager = GameManager(myGame);
-
-    gameManager.play();
-}
-
-void GlobalStateManager::startGame() {
-    refresh();
-    
-    // 1-st map
-    if(!showMapIntro("./tutorial1.txt", "hi")) {
-        run();
-    }
-
-    // 2-nd map
-    if(!showMapIntro("./tutorial2.txt", "hi")) {
-        run();
-    }
-    // 3-rd map
-    if(!showMapIntro("./tutorial3.txt", "hi")) {
-        run();
-    }
-    // 4-th map
-    if(!showMapIntro("./tutorial4.txt", "hi")) {
-        run();
-    }
-
-}
 bool GlobalStateManager::showMapIntro(std::string mapDir, std::string userName) {
     refresh();
     FileManager fileManager;
@@ -91,17 +58,42 @@ bool GlobalStateManager::showMapIntro(std::string mapDir, std::string userName) 
     return 1;
 }
 
-void GlobalStateManager::startCustomGame() {
-    refresh();
-
-    FileManager test;
-    MapItem items = test.readMap("./testMap2.txt"); // rename
-    UserItem users = test.readUser("hi");
+void GlobalStateManager::startGame(std::string mapDir, std::string userName) {
+    FileManager fileManager;
+    MapItem items = fileManager.readMap(mapDir);
+    UserItem users = fileManager.readUser(userName);
 
     GameRunner myGame(items);
     GameManager gameManager = GameManager(myGame);
 
     gameManager.play();
+}
+
+void GlobalStateManager::startGame() {
+    refresh();
+    
+    // 1-st map
+    if(!showMapIntro("./tutorial1.txt", "hi")) {
+        run();
+    }
+
+    // 2-nd map
+    if(!showMapIntro("./tutorial2.txt", "hi")) {
+        run();
+    }
+    // 3-rd map
+    if(!showMapIntro("./tutorial3.txt", "hi")) {
+        run();
+    }
+    // 4-th map
+    if(!showMapIntro("./tutorial4.txt", "hi")) {
+        run();
+    }
+
+}
+
+void GlobalStateManager::startgameWithAi() {
+
 }
 
 void GlobalStateManager::startMapEditor() {
