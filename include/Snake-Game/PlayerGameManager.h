@@ -3,8 +3,8 @@
  * author: 구형모 - chrisais9@naver.com
  */
 
-#ifndef SNAKE_GAME_GAME_MANAGER
-#define SNAKE_GAME_GAME_MANAGER
+#ifndef SNAKE_GAME_PlAYER_GAME_MANAGER
+#define SNAKE_GAME_PlAYER_GAME_MANAGER
 
 #include <ncurses.h>
 #include <unistd.h>
@@ -20,10 +20,10 @@
 #define GOAL_BOARD_HEIGHT 10
 
 
-class GameManager {
+class PlayerGameManager {
 public:
-    GameManager(GameRunner gameRunner);
-    ~GameManager();
+    PlayerGameManager(GameRunner gameRunner);
+    ~PlayerGameManager();
     void play();
 private:
     int maxHeight, maxWidth;

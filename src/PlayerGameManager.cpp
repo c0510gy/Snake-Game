@@ -1,13 +1,13 @@
-#include "Snake-Game/GameManager.h"
+#include "Snake-Game/PlayerGameManager.h"
 
-GameManager::GameManager(GameRunner gameRunner): mGameRunner(gameRunner) {
+PlayerGameManager::PlayerGameManager(GameRunner gameRunner): mGameRunner(gameRunner) {
     initializeWindow();
     initializeColors();
     initializeScoreBoard();
     initializeGoalBoard();
 }
 
-GameManager::~GameManager() {
+PlayerGameManager::~PlayerGameManager() {
     nodelay(stdscr, false);
     wclear(windowScoreBoard);
     wrefresh(windowScoreBoard);
@@ -17,7 +17,7 @@ GameManager::~GameManager() {
     delwin(windowGoalBoard);
 }
 
-void GameManager::play() {
+void PlayerGameManager::play() {
     int needToGameOver = 0;
     while (1)
     {
@@ -131,7 +131,7 @@ void GameManager::play() {
     }
 }
 
-void GameManager::initializeWindow() {
+void PlayerGameManager::initializeWindow() {
     nodelay(stdscr, true); // 입력 대기 없이(continuous 하게 게임 진행)
     
     getmaxyx(stdscr, maxHeight, maxWidth);
@@ -141,7 +141,7 @@ void GameManager::initializeWindow() {
     gameMapWidth = mMapManager.width;
 }
 
-void GameManager::validateWindow() {
+void PlayerGameManager::validateWindow() {
     
     const MapManager mMapManager = mGameRunner.getMap();
     int requiredHeight = mMapManager.height + WINDOW_OFFSET + SCORE_BOARD_HEIGHT + GOAL_BOARD_HEIGHT + 10;
@@ -155,7 +155,7 @@ void GameManager::validateWindow() {
     }
 }
 
-void GameManager::initializeColors() {
+void PlayerGameManager::initializeColors() {
     // 색 사용하기 위해
     start_color();
     use_default_colors();
@@ -175,7 +175,7 @@ void GameManager::initializeColors() {
     init_pair(3, COLOR_WHITE, COLOR_MAGENTA); // gate
 }
 
-void GameManager::initializeScoreBoard() {
+void PlayerGameManager::initializeScoreBoard() {
 
     refresh();
     int offsetx = gameMapWidth + WINDOW_OFFSET + SCORE_BOARD_WIDTH + 5;
@@ -196,7 +196,7 @@ void GameManager::initializeScoreBoard() {
 }
 
 
-void GameManager::updateScoreStatus(const Score& score) {
+void PlayerGameManager::updateScoreStatus(const Score& score) {
     mvwprintw(windowScoreBoard, 2, 1, "B: %d / %d", score.scoreBody, score.maxBodyScore);
     mvwprintw(windowScoreBoard, 3, 1, "+: %d", score.scoreGrowth);
     mvwprintw(windowScoreBoard, 4, 1, "-: %d", score.scorePoison);
@@ -205,7 +205,7 @@ void GameManager::updateScoreStatus(const Score& score) {
     wrefresh(windowScoreBoard);
 }
 
-void GameManager::initializeGoalBoard() {
+void PlayerGameManager::initializeGoalBoard() {
 
     refresh();
     int offsetx = gameMapWidth + WINDOW_OFFSET + GOAL_BOARD_WIDTH + 5;
@@ -223,7 +223,7 @@ void GameManager::initializeGoalBoard() {
     wrefresh(windowGoalBoard);
 }
 
-void GameManager::updateMissionStatus(const Mission& mission) {
+void PlayerGameManager::updateMissionStatus(const Mission& mission) {
     mvwprintw(windowGoalBoard, 2, 1, "B: %d (%c)", mission.goalBody, (mission.achBody ? 'O' : ' '));
     mvwprintw(windowGoalBoard, 3, 1, "+: %d (%c)", mission.goalGrowth, (mission.achGrowth ? 'O' : ' '));
     mvwprintw(windowGoalBoard, 4, 1, "-: %d (%c)", mission.goalPoison, (mission.achPoison ? 'O' : ' '));
@@ -233,7 +233,7 @@ void GameManager::updateMissionStatus(const Mission& mission) {
 
 }
 
-void GameManager::showPauseWindow() {
+void PlayerGameManager::showPauseWindow() {
 
     nodelay(stdscr, false);
     refresh();

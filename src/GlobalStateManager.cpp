@@ -64,7 +64,7 @@ void GlobalStateManager::startGame(std::string mapDir, std::string userName) {
     UserItem users = fileManager.readUser(userName);
 
     GameRunner myGame(items);
-    GameManager gameManager = GameManager(myGame);
+    PlayerGameManager gameManager(myGame);
 
     gameManager.play();
 }
