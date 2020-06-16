@@ -45,7 +45,6 @@ private:
     void updateScoreStatus(const Score& score);
     void updateMissionStatus(const Mission& mission);
 
-    void showMapIntro();
     void showPauseWindow();
 };
 

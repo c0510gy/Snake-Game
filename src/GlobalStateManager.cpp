@@ -93,6 +93,43 @@ void GlobalStateManager::startGame() {
 }
 
 void GlobalStateManager::startgameWithAi() {
+    refresh();
+    std::vector<int> eachHiddenLayer = {20, 12};
+    std::vector<long double> modelWeights;
+
+    // parse model weight from file
+
+    std::string gene;
+    std::ifstream inFile = std::ifstream("./ai8.txt");
+    inFile >> gene;
+    inFile.close();
+
+    std::vector<long double> ret;
+    std::vector<std::string> splitted;
+    std::string tmp = "";
+    for(int j = 0; j < gene.size(); ++j){
+        if(gene[j] == ','){
+            splitted.push_back(tmp);
+            tmp = "";
+            continue;
+        }
+        tmp += gene[j];
+    }
+    for(int j = 0; j < splitted.size(); ++j)
+        ret.push_back(stod(splitted[j]));
+    modelWeights = ret;
+
+
+    // get map for both player and ai
+    FileManager fileManager;
+    MapItem items = fileManager.readMap("./tutorial1.txt");
+
+    SnakeAI aiGameRunner(eachHiddenLayer, modelWeights, items);
+    GameRunner playerGameRunner(items);
+
+    AiGameManager gameManager(playerGameRunner, aiGameRunner);
+
+    gameManager.play();
 
 }
 

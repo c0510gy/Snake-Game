@@ -150,6 +150,8 @@ void PlayerGameManager::validateWindow() {
 
         move((maxHeight-2)/2,(maxWidth-5)/2);
         printw("Window size should be bigger than %d X %d", requiredHeight, requiredWidth);
+        nodelay(stdscr, false);
+        getch();
         endwin();
         exit(1);
     }

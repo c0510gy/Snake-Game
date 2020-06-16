@@ -37,6 +37,7 @@ void MenuManager::showMenu() {
             mvprintw(i++, 15, "%s", lineScan.c_str());
         }
     }
+    inFile.close();
 
     mvprintw(13, 15, "Kookmin university C++ EndTerm Project");
     mvprintw(16, 15, "- Koo Hyong Mo");
@@ -105,9 +106,11 @@ void MenuManager::startMode(int mode) {
             GlobalStateManager().startGame();
             break;
         case MODE_AI:
+            destroyMenu();
             GlobalStateManager().startgameWithAi();
             break;
         case MODE_CUSTOM_GAME:
+            destroyMenu();
             GlobalStateManager().startGame("./putCustomGameMap.txt", "username^^");
             break;
         case MODE_EDIT_MAP:
