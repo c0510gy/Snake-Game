@@ -33,6 +33,7 @@ private:
     void initDrawMap();
     void initSetMap();
     void initializeColors();
+    void autoSetWall();
 };
 
 #endif

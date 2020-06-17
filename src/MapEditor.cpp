@@ -70,6 +70,8 @@ void MapEditor::edit() {
         refresh();
         if(saveFlag) {
             userMapItem.gameMap = objMap;
+
+            autoSetWall();
             FileManager test;
             test.writeMap(userMapItem, "./userchange" + userMapItem.name + ".txt");
             // 종료
@@ -85,7 +87,31 @@ void MapEditor::edit() {
         usleep(300000);
     }
 }
+void MapEditor::autoSetWall() {
+    int dir[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+    MapManager objMap = userMapItem.gameMap;
 
+    for (int y = 0; y < objMap.height; ++y)
+    {
+        for (int x = 0; x < objMap.width; ++x)
+        {
+            if(objMap.get(x, y) == WALL){
+                int tmpWallCnt = 0;
+                for(int z = 0; z < 4; ++z){
+                    int nx = x + dir[z][0];
+                    int ny = y + dir[z][1];
+                    if(objMap.get(nx, ny) != EMPTY)
+                        tmpWallCnt++;
+                }
+                if(tmpWallCnt == 4)
+                    objMap.set(x, y, IMWALL);
+            }
+        }
+    }
+    userMapItem.gameMap = objMap;
+}
+
+// 사용자에게 입력받은 WH에 맞는 Map 테두리 wall을 만들어 줍니다.
 void MapEditor::initSetMap() {
     MapManager objMap = userMapItem.gameMap;
     for (int y = 0; y < objMap.height; ++y)
@@ -107,9 +133,6 @@ void MapEditor::initDrawMap() {
     {
         for (int x = 0; x < objMap.width; ++x)
         {
-            // 커서 위치를 x,y로 이동 시킴.
-            // ncurses를 활용해 글을 쓰려면 다음 순서를 거쳐야함
-            // 1. 커서 이동(move) 2. write(addch)
             move(y + WINDOW_OFFSET, x + WINDOW_OFFSET);
             switch (objMap.get(x, y))
             {
@@ -117,17 +140,10 @@ void MapEditor::initDrawMap() {
                     addch(' ');
                     break;
                 case WALL:
+                case IMWALL:
                     attron(COLOR_PAIR(1));
                     addch(' ');
                     attroff(COLOR_PAIR(1));
-                    break;
-                case IMWALL:
-                    // attron : 색 활성화
-                    attron(COLOR_PAIR(2));
-                    // addch : 현재 위치에 (위에서 활성화한 색을 가진) 문자 출력
-                    addch(' ');
-                    // attroff : 색 비활성화
-                    attroff(COLOR_PAIR(2));
                     break;
                 default:
                     addch('?');
@@ -141,9 +157,9 @@ void MapEditor::initializeWindow() {
     
     getmaxyx(stdscr, maxHeight, maxWidth);
 
-    // const MapManager objMap = userMapItem.gameMap;
-    // gameMapHeight = objMap.height;
-    // gameMapWidth = objMap.width;
+    const MapManager objMap = userMapItem.gameMap;
+    gameMapHeight = objMap.height;
+    gameMapWidth = objMap.width;
 }
 
 void MapEditor::validateWindow() {
@@ -151,7 +167,6 @@ void MapEditor::validateWindow() {
     int requiredHeight = objMap.height + WINDOW_OFFSET + 10;
     int requiredWidth = objMap.width + WINDOW_OFFSET + 10;
     if (requiredHeight > maxHeight || requiredWidth > maxWidth) {
-
         move((maxHeight-2)/2,(maxWidth-5)/2);
         printw("Window size should be bigger than %d X %d", requiredHeight, requiredWidth);
         endwin();
@@ -166,7 +181,6 @@ void MapEditor::initializeColors() {
 
     if (has_colors() == FALSE) {
         // 색 지원 안할때 처리
-
         printw("Your terminal does not support color\n");
         refresh();
         endwin();
@@ -175,10 +189,11 @@ void MapEditor::initializeColors() {
 
     // define colors
     init_pair(1, COLOR_WHITE, COLOR_WHITE); // wall
-    init_pair(2, COLOR_GREEN, COLOR_GREEN); // snake
+    init_pair(2, COLOR_GREEN, COLOR_GREEN);
     init_pair(3, COLOR_WHITE, COLOR_MAGENTA); // gate
 }
 
+// 최초 input 윈도우를 출력하는 함수
 void MapEditor::showInputWindow() {
     nodelay(stdscr, false);
     refresh();
