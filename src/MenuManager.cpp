@@ -40,8 +40,8 @@ void MenuManager::showMenu() {
     inFile.close();
 
     mvprintw(13, 15, "Kookmin university C++ EndTerm Project");
-    mvprintw(16, 15, "- Koo Hyong Mo");
-    mvprintw(17, 15, "- Sang Gun Yun");
+    mvprintw(16, 15, "- Sang-Geon Yun (Team Leader)");
+    mvprintw(17, 15, "- Koo Hyong Mo");
     mvprintw(18, 15, "- Kim Tae Yun");
 
 
