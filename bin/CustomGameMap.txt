@@ -1,0 +1,24 @@
+name=name
+author=User
+date=2020-6-20
+detail=Created map by MapEditor
+W=10
+H=10
+startPointX=4
+startPointY=4
+startDirection=2
+goalBody=10
+goalGrowth=5
+goalPoison=2
+goalGate=1
+mapData=
+2111111112
+1000000001
+1000000001
+1000000001
+1000000001
+1000000001
+1000000001
+1000000001
+1000000001
+2111111112

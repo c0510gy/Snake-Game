@@ -17,6 +17,9 @@ void MapEditor::edit() {
     MapManager objMap = userMapItem.gameMap;
     int y, x;
     initDrawMap();
+    move(1, 3);
+    printw("Press '0' to set Empty. Press '1' to set wall. Press 's' to save.");
+
     move(WINDOW_OFFSET, WINDOW_OFFSET);
     while (1)
     {
@@ -50,12 +53,6 @@ void MapEditor::edit() {
                 attroff(COLOR_PAIR(1));
                 objMap.set(x - WINDOW_OFFSET, y - WINDOW_OFFSET, WALL);
                 break;
-            case '2':
-                attron(COLOR_PAIR(2));
-                addch(' ');
-                attroff(COLOR_PAIR(2));
-                objMap.set(x - WINDOW_OFFSET, y - WINDOW_OFFSET, IMWALL);
-                break;
             case 's':
                 saveFlag = true;
                 break;
@@ -63,17 +60,16 @@ void MapEditor::edit() {
             default:
                 break;
         }
-
+        
         move(y, x);
 
-        //refresh를 invoke 해줘야 ncurses가 화면에 그려줌
         refresh();
         if(saveFlag) {
             userMapItem.gameMap = objMap;
 
             autoSetWall();
             FileManager test;
-            test.writeMap(userMapItem, "./userchange" + userMapItem.name + ".txt");
+            test.writeMap(userMapItem, "CustomGameMap.txt");
             // 종료
             printw("Save!");
             refresh();
@@ -172,9 +168,8 @@ void MapEditor::validateWindow() {
     int requiredHeight = objMap.height + WINDOW_OFFSET + 10;
     int requiredWidth = objMap.width + WINDOW_OFFSET + 10;
     if (requiredHeight > maxHeight || requiredWidth > maxWidth) {
-        move((maxHeight-2)/2,(maxWidth-5)/2);
-        printw("Window size should be bigger than %d X %d", requiredHeight, requiredWidth);
         endwin();
+        std::cout << "Window size should be bigger than" << requiredWidth << " X " << requiredHeight << std::endl;
         exit(1);
     }
 }
@@ -222,8 +217,8 @@ void MapEditor::showInputWindow() {
     mvwprintw(windowInfoInput, 3, 10, "%s", width_key.c_str());
     mvwprintw(windowInfoInput, 4, 10, "%s", height_key.c_str());
 
-    mvwprintw(windowInfoInput, 6, 10, "%s", "You can move between items with the upper and lower keys.");
-    mvwprintw(windowInfoInput, 7, 10, "%s", "Press Enter key to save.");
+    mvwprintw(windowInfoInput, 6, 10, "%s", "You can move next items with the Enter key.");
+    mvwprintw(windowInfoInput, 7, 10, "%s", "When you reach the last item, Press Enter key to save.");
     wrefresh(windowInfoInput);
 
     curs_set(0);
@@ -232,27 +227,50 @@ void MapEditor::showInputWindow() {
     while (1)
     {
         int c = getch();
+
         switch(tmp_idx){
             case(2):
-                name += c;
-                name_key += c;
+                if (c == 127) {;
+                    name = name.substr(0, name.length() - 1);
+                    name_key = name_key.substr(0, name_key.length() - 1);
+                    mvwprintw(windowInfoInput, 2, 10 + name_key.length(), "%s", " "); // 제거
+                }
+                else if (c != '\n') {
+                    name += c;
+                    name_key += c;
+                }
+
                 mvwprintw(windowInfoInput, 2, 10, "%s", name_key.c_str());
                 wrefresh(windowInfoInput);
                 break;
             case(3):
-                width += c;
-                width_key += c;
+                if (c == 127) {
+                    width = width.substr(0, width.length() - 1);
+                    width_key = width_key.substr(0, width_key.length() - 1);
+                    mvwprintw(windowInfoInput, 3, 10 + width_key.length(), "%s", " "); // 제거
+                }
+                else {
+                    width += c;
+                    width_key += c;
+                }
                 mvwprintw(windowInfoInput, 3, 10, "%s", width_key.c_str());
                 wrefresh(windowInfoInput);
                 break;
             case(4):
-                height += c;
-                height_key += c;
+                if (c == 127) {
+                    height = height.substr(0, height.length() - 1);
+                    height_key = height_key.substr(0, height_key.length() - 1);
+                    mvwprintw(windowInfoInput, 3, 10 + width_key.length(), "%s", " "); // 제거
+                }
+                else {
+                    height += c;
+                    height_key += c;
+                }
                 mvwprintw(windowInfoInput, 4, 10, "%s", height_key.c_str());
                 wrefresh(windowInfoInput);
                 break;
-        } 
-        
+        }
+
         if(c == '\n' && tmp_idx < 4) {
             ++tmp_idx;
         }
@@ -264,6 +282,17 @@ void MapEditor::showInputWindow() {
     MapManager tmpinit(atoi(width.c_str()), atoi(height.c_str()));
     userMapItem.name = name;
     userMapItem.gameMap = tmpinit;
+
+    // Default Data
+    userMapItem.author = "User";
+    userMapItem.detail = "Created map by MapEditor";
+    userMapItem.startPoint.x = 4;
+    userMapItem.startPoint.y = 4;
+    userMapItem.startDirection = 2;
+    userMapItem.goalBody = 10;
+    userMapItem.goalGrowth = 5;
+    userMapItem.goalPoison = 2;
+    userMapItem.goalGate = 1;
 
     refresh();
     endwin();

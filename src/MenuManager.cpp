@@ -17,15 +17,14 @@ void MenuManager::initializeMenu() {
 void MenuManager::showMenu() {
 
     if (30 > maxHeight || 150 > maxWidth) {
-
-        move(15,75);
-        printw("Window size should be bigger than %d X %d", 150, 30);
         endwin();
+        move(15,75);
+        
+        std::cout << "Window size should be bigger than 150 X 30" << std::endl;
         exit(1);
     }
 
     refresh();
-    
 
     std::ifstream inFile = std::ifstream("./logo.txt");
     if (inFile.is_open())
@@ -39,10 +38,10 @@ void MenuManager::showMenu() {
     }
     inFile.close();
 
-    mvprintw(13, 15, "Kookmin university C++ EndTerm Project");
+    mvprintw(13, 15, "Kookmin University C++ EndTerm Project");
     mvprintw(16, 15, "- Sang-Geon Yun (Team Leader)");
-    mvprintw(17, 15, "- Koo Hyong Mo");
-    mvprintw(18, 15, "- Kim Tae Yun");
+    mvprintw(17, 15, "- Hyong Mo Koo");
+    mvprintw(18, 15, "- Tae Yun Kim");
 
 
 
@@ -111,7 +110,7 @@ void MenuManager::startMode(int mode) {
             break;
         case MODE_CUSTOM_GAME:
             destroyMenu();
-            GlobalStateManager().startGame("./putCustomGameMap.txt", "username^^");
+            GlobalStateManager().startGame("./CustomGameMap.txt", "hi");
             break;
         case MODE_EDIT_MAP:
             destroyMenu();

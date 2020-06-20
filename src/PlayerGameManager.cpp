@@ -1,4 +1,5 @@
 #include "Snake-Game/PlayerGameManager.h"
+#include <iostream>
 
 PlayerGameManager::PlayerGameManager(GameRunner gameRunner): mGameRunner(gameRunner) {
     initializeWindow();
@@ -147,12 +148,10 @@ void PlayerGameManager::validateWindow() {
     int requiredHeight = mMapManager.height + WINDOW_OFFSET + SCORE_BOARD_HEIGHT + GOAL_BOARD_HEIGHT + 10;
     int requiredWidth = mMapManager.width + WINDOW_OFFSET + SCORE_BOARD_WIDTH + SCORE_BOARD_HEIGHT + 10;
     if (requiredHeight > maxHeight || requiredWidth > maxWidth) {
-
-        move((maxHeight-2)/2,(maxWidth-5)/2);
-        printw("Window size should be bigger than %d X %d", requiredHeight, requiredWidth);
+        endwin();
         nodelay(stdscr, false);
         getch();
-        endwin();
+        std::cout << "Window size should be bigger than" << requiredWidth << " X " << requiredHeight << std::endl;
         exit(1);
     }
 }
