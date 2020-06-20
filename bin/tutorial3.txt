@@ -1,7 +1,7 @@
-name=w
+name=Level3.Open Plus
 author=Alexandre Dantas
-date=2020.6.9
-detail=Nothing fancy, just the letter W
+date=2020.6.15
+detail=I'm a lot more open.
 W=78
 H=21
 startPointX=3

@@ -29,12 +29,12 @@ bool GlobalStateManager::showMapIntro(std::string mapDir, std::string userName) 
 
     std::string message;
     message = "name : " + items.name;
-    mvwprintw(windowIntro, 2, 1, "%s %s", message.c_str());
+    mvwprintw(windowIntro, 2, 1, "%s", message.c_str());
 
-    message = "author : " + items.name;
+    message = "date : " + items.date;
     mvwprintw(windowIntro, 3, 1, "%s", message.c_str());
 
-    message = "detail : " + items.name;
+    message = "detail : " + items.detail;
     mvwprintw(windowIntro, 4, 1, "%s", message.c_str());
 
     message = "Press any key to continue or 'q' to quit";

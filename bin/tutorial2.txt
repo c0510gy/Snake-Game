@@ -1,7 +1,7 @@
-name=w
+name=Level2.Like Maze
 author=Alexandre Dantas
 date=2020.6.9
-detail=Nothing fancy, just the letter W
+detail=We lost our way in the labyrinth.
 W=78
 H=21
 startPointX=3

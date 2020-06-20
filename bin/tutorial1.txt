@@ -1,7 +1,7 @@
-name=testmap1
+name=Level1.Too Easy
 author=sg
 date=2020.5.1
-detail=is test
+detail=It is too familiar for comment
 W=21
 H=21
 startPointX=4

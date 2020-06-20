@@ -31,16 +31,20 @@ void MapEditor::edit() {
         switch (input)
         {
             case KEY_LEFT:
-                x--;
+                if(x - WINDOW_OFFSET > 0)
+                    x--;
                 break;
             case KEY_UP:
-                y--;
+                if(y - WINDOW_OFFSET > 0)
+                    y--;
                 break;
             case KEY_RIGHT:
-                x++;
+                if(x - WINDOW_OFFSET < objMap.width - 1)
+                    x++;
                 break;
             case KEY_DOWN:
-                y++;
+                if(y - WINDOW_OFFSET < objMap.height - 1)
+                    y++;
                 break;    
 
             case '0':
@@ -230,10 +234,13 @@ void MapEditor::showInputWindow() {
 
         switch(tmp_idx){
             case(2):
-                if (c == 127) {;
-                    name = name.substr(0, name.length() - 1);
-                    name_key = name_key.substr(0, name_key.length() - 1);
-                    mvwprintw(windowInfoInput, 2, 10 + name_key.length(), "%s", " "); // 제거
+                if (c == 127) {
+                    if(name_key.length() > 7){
+                        name = name.substr(0, name.length() - 1);
+                        name_key = name_key.substr(0, name_key.length() - 1);
+                        mvwprintw(windowInfoInput, 2, 10 + name_key.length(), "%s", " "); // 제거
+                    }
+                   
                 }
                 else if (c != '\n') {
                     name += c;
@@ -245,9 +252,11 @@ void MapEditor::showInputWindow() {
                 break;
             case(3):
                 if (c == 127) {
-                    width = width.substr(0, width.length() - 1);
-                    width_key = width_key.substr(0, width_key.length() - 1);
-                    mvwprintw(windowInfoInput, 3, 10 + width_key.length(), "%s", " "); // 제거
+                    if(width_key.length() > 8){
+                        width = width.substr(0, width.length() - 1);
+                        width_key = width_key.substr(0, width_key.length() - 1);
+                        mvwprintw(windowInfoInput, 3, 10 + width_key.length(), "%s", " "); // 제거
+                    } 
                 }
                 else {
                     width += c;
@@ -258,9 +267,11 @@ void MapEditor::showInputWindow() {
                 break;
             case(4):
                 if (c == 127) {
-                    height = height.substr(0, height.length() - 1);
-                    height_key = height_key.substr(0, height_key.length() - 1);
-                    mvwprintw(windowInfoInput, 3, 10 + width_key.length(), "%s", " "); // 제거
+                    if (height_key.length() > 9){
+                        height = height.substr(0, height.length() - 1);
+                        height_key = height_key.substr(0, height_key.length() - 1);
+                        mvwprintw(windowInfoInput, 4, 10 + height_key.length(), "%s", " "); // 제거
+                    }
                 }
                 else {
                     height += c;
@@ -279,27 +290,35 @@ void MapEditor::showInputWindow() {
         }
     }
 
-    MapManager tmpinit(atoi(width.c_str()), atoi(height.c_str()));
-    userMapItem.name = name;
-    userMapItem.gameMap = tmpinit;
+    if(atoi(width.c_str()) <= 0 || atoi(height.c_str()) <= 0){
+        refresh();
+        endwin();
+        delwin(windowInfoInput);
+        std::cout << "[ERR] Width & Height must be positive integers!! Try again";
+        exit(1);
+    }
+    else {
+        MapManager tmpinit(atoi(width.c_str()), atoi(height.c_str()));
+        userMapItem.name = name;
+        userMapItem.gameMap = tmpinit;
 
-    // Default Data
-    userMapItem.author = "User";
-    userMapItem.detail = "Created map by MapEditor";
-    userMapItem.startPoint.x = 4;
-    userMapItem.startPoint.y = 4;
-    userMapItem.startDirection = 2;
-    userMapItem.goalBody = 10;
-    userMapItem.goalGrowth = 5;
-    userMapItem.goalPoison = 2;
-    userMapItem.goalGate = 1;
+        // Default Data
+        userMapItem.author = "User";
+        userMapItem.detail = "Created map by MapEditor";
+        userMapItem.startPoint.x = 4;
+        userMapItem.startPoint.y = 4;
+        userMapItem.startDirection = 2;
+        userMapItem.goalBody = 10;
+        userMapItem.goalGrowth = 5;
+        userMapItem.goalPoison = 2;
+        userMapItem.goalGate = 1;
+        refresh();
+        endwin();
 
-    refresh();
-    endwin();
-
-    wclear(windowInfoInput);
-    wrefresh(windowInfoInput);
-    delwin(windowInfoInput);
-    nodelay(stdscr, true);
-    getch();
+        wclear(windowInfoInput);
+        wrefresh(windowInfoInput);
+        delwin(windowInfoInput);
+        nodelay(stdscr, true);
+        getch();
+    }
 }
