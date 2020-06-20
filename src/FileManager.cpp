@@ -10,11 +10,19 @@
             
 void FileManager::writeMap(const MapItem &map, std::string filePath)
 {
+    // 현재 시간 관련 객체
+    struct tm nowtime;
+    time_t curr_time = time(nullptr);
+    localtime_r(&curr_time, &nowtime);
+    int year = nowtime.tm_year + 1900;
+    int month = nowtime.tm_mon + 1;
+    int day = nowtime.tm_mday;
+
     outFile = std::ofstream(filePath);
 
     outFile << "name=" << map.name << "\n";
     outFile << "author=" << map.author << "\n";
-    outFile << "date=" << map.date << "\n";
+    outFile << "date=" << year << "-" << month << "-" << day << "\n";
     outFile << "detail=" << map.detail << "\n";
     outFile << "W=" << map.gameMap.width << "\n";
     outFile << "H=" << map.gameMap.height << "\n";
@@ -40,6 +48,8 @@ void FileManager::writeMap(const MapItem &map, std::string filePath)
                 case IMWALL:
                     tmp += "2";
                     break;
+                default:
+                    continue;
             }
         }
         outFile << tmp << "\n";

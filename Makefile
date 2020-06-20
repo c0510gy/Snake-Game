@@ -40,7 +40,7 @@ $(BUILDDIR)/%.o: $(SOURCEDIRS)/%.$(SRCEXT)
 	@echo " $(CC) $(CFLAGS) $(CINCLUDES) -c -o $@ $<"; $(CC) $(CFLAGS) $(CINCLUDES) -c -o $@ $<
 
 tester: $(OBJECTS)
-	g++ -std=c++14 -Wall -Wextra -g -lnCurses test/test.cpp -Iinclude -Iinclude/Snake-Game -Llib build/Snake-Game.o build/Interface.o build/FileManager.o -o test/test.o
+	g++ -std=c++14 -Wall -Wextra -g -lnCurses test/test.cpp -Iinclude -Iinclude/Snake-Game -Llib build/Snake-Game.o build/FileManager.o -o test/test.o
 
 mlpTester: $(OBJECTS)
 	g++ -std=c++14 -Wall -Wextra -g -lnCurses test/testMLP.cpp -Iinclude/GA-MLP -Llib build/MLP.o -o test/testMLP.o

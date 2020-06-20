@@ -135,11 +135,11 @@ void GlobalStateManager::startgameWithAi() {
 
 void GlobalStateManager::startMapEditor() {
     refresh();
-
     FileManager test;
-    MapItem items = test.readMap("./tutorial1.txt"); // rename
+    MapItem items;
     UserItem users = test.readUser("hi");
-    MapEditor editor(items);
 
-    editor.edit(items, "s");
+    MapEditor editor(items);
+    editor.showInputWindow();
+    editor.edit();
 }
