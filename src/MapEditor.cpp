@@ -87,8 +87,10 @@ void MapEditor::edit() {
         usleep(300000);
     }
 }
+
+// 자동으로 Wall 구분
 void MapEditor::autoSetWall() {
-    int dir[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+    int dir[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}}; // 4방향 탐색
     MapManager objMap = userMapItem.gameMap;
 
     for (int y = 0; y < objMap.height; ++y)
@@ -127,6 +129,7 @@ void MapEditor::initSetMap() {
     userMapItem.gameMap = objMap;
 }
 
+// Map 요소에서 Wall과 Empty를 구분하여 Ncurses로 맵을 그려줍니다.
 void MapEditor::initDrawMap() {
     MapManager objMap = userMapItem.gameMap;
     for (int y = 0; y < objMap.height; ++y)
@@ -152,6 +155,7 @@ void MapEditor::initDrawMap() {
     }
 }
 
+// 윈도우를 초기화해줍니다.
 void MapEditor::initializeWindow() {
     nodelay(stdscr,TRUE); // 입력 대기 없이(continuous 하게 게임 진행)
     
@@ -162,6 +166,7 @@ void MapEditor::initializeWindow() {
     gameMapWidth = objMap.width;
 }
 
+// 현재 터미널 창 크기를 검증해줍니다.
 void MapEditor::validateWindow() {
     const MapManager objMap = userMapItem.gameMap;
     int requiredHeight = objMap.height + WINDOW_OFFSET + 10;
@@ -174,6 +179,7 @@ void MapEditor::validateWindow() {
     }
 }
 
+// 터미널 색상 사용을 위해 초기화 해줍니다.
 void MapEditor::initializeColors() {
     // 색 사용하기 위해
     start_color();
